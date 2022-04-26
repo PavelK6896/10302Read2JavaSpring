@@ -8,11 +8,10 @@ import app.web.pavelk.read2.schema.VoteType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
+
 public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     @Query("select v.voteType from Vote v where v.post = :post and v.user = :user")

@@ -9,8 +9,6 @@ springdoc:
     path: /swagger-ui/index.html
 
 spring:
-  profiles:
-    active: "dev"
   jackson:
     serialization:
       fail-on-empty-beans: false
@@ -31,22 +29,17 @@ spring:
       mode: always
       schema-locations: classpath:db/schema.sql
       data-locations: classpath:db/data.sql
-
   jpa:
     generate-ddl: false
     show-sql: true
     properties:
       hibernate:
-        format_sql: false
+        format_sql: true
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
         temp:
           use_jdbc_metadata_defaults: false
     hibernate:
       ddl-auto: none
 
-
 jwt:
   expiration: 1500
-
-debug: true
-

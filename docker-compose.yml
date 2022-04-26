@@ -15,6 +15,18 @@ services:
     volumes:
       - postgres14_read2_data:/var/lib/postgresql/data
 
+  read2:
+    image: 'demo22-v8'
+    container_name: read2
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres14_read2:5432/read2
+    ports:
+      - "8080:8080"
+    networks:
+      read2_net:
+    depends_on:
+      - postgres14_read2
+
 networks:
   read2_net:
     driver: bridge

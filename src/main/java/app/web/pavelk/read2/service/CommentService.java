@@ -12,7 +12,6 @@ import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,8 +32,8 @@ public class CommentService {
     private final UserRepository userRepository;
     private final AuthService authService;
 
-    @Autowired
-    private CommentMapper commentMapper;
+
+    private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
     private final MailService mailService;
     @Value("${host-url:https}")

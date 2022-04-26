@@ -39,8 +39,6 @@ import static org.springframework.http.HttpStatus.OK;
 @Transactional
 @RequiredArgsConstructor
 public class AuthService {
-    @Value("${host:https}")
-    private String host;
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -49,6 +47,8 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
     private final UserDetailsService userDetailsServiceImpl;
+    @Value("${host:https}")
+    private String host;
 
     @Transactional
     public ResponseEntity<String> signUp(RegisterRequest registerRequest) {
