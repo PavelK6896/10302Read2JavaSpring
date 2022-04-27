@@ -1,9 +1,7 @@
 package app.web.pavelk.read2.schema;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -11,11 +9,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Builder
 @AllArgsConstructor
@@ -45,4 +46,17 @@ public class User implements Serializable {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
