@@ -144,7 +144,7 @@ public class AuthService {
     }
 
     public ResponseEntity<AuthenticationResponse> refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        log.info("refreshTokens -------------------------- ******************************** ");
+        log.info("refreshTokens");
         refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
 
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(refreshTokenRequest.getUsername());

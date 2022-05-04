@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -61,10 +60,11 @@ public class CommentService {
     public ResponseEntity<List<CommentsDto>> getAllCommentsForPost(Long postId) {
         log.info("getAllCommentsForPost");
         Post post = postRepository.findById(postId).orElseThrow(() ->
-                new PostNotFoundException("Not found post " + postId.toString()));
+                new PostNotFoundException("Not found post " + postId));
         return ResponseEntity.status(OK).body(
                 commentRepository.findByPost(post).stream()
-                        .map(commentMapper::mapToDto).collect(toList()));
+                        .map(commentMapper::mapToDto).toList()
+        );
     }
 
     public ResponseEntity<List<CommentsDto>> getAllCommentsForUser(String userName) {
@@ -75,6 +75,6 @@ public class CommentService {
                 .body(commentRepository.findAllByUser(user)
                         .stream()
                         .map(commentMapper::mapToDto)
-                        .collect(toList()));
+                        .toList());
     }
 }

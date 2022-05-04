@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -72,14 +70,14 @@ public class PostService {
     public ResponseEntity<PostResponseDto> getPost(Long id) {
         log.info("getPost");
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException("Post not found id " + id.toString()));
+                .orElseThrow(() -> new PostNotFoundException("Post not found id " + id));
         return ResponseEntity.status(HttpStatus.OK).body(getPostDto(post));
     }
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<PostResponseDto>> getAllPosts() {
 
-        List<PostResponseDto> collect = postRepository.findAll().stream().map(this::getPostDto).collect(toList());
+        List<PostResponseDto> collect = postRepository.findAll().stream().map(this::getPostDto).toList();
         return ResponseEntity.status(HttpStatus.OK).body(collect);
     }
 
@@ -88,8 +86,8 @@ public class PostService {
     public ResponseEntity<List<PostResponseDto>> getPostsBySubreddit(Long subredditId) {
         log.info("getPostsBySubreddit");
         Subreddit subreddit = subredditRepository.findById(subredditId)
-                .orElseThrow(() -> new SubredditNotFoundException("Subreddit not id " + subredditId.toString()));
-        List<PostResponseDto> collect = postRepository.findAllBySubreddit(subreddit).stream().map(this::getPostDto).collect(toList());
+                .orElseThrow(() -> new SubredditNotFoundException("Subreddit not id " + subredditId));
+        List<PostResponseDto> collect = postRepository.findAllBySubreddit(subreddit).stream().map(this::getPostDto).toList();
         return ResponseEntity.status(HttpStatus.OK).body(collect);
     }
 
@@ -98,7 +96,7 @@ public class PostService {
         log.info("getPostsBySubreddit");
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username Not Found " + username));
-        List<PostResponseDto> collect = postRepository.findByUser(user).stream().map(this::getPostDto).collect(toList());
+        List<PostResponseDto> collect = postRepository.findByUser(user).stream().map(this::getPostDto).toList();
         return ResponseEntity.status(HttpStatus.OK).body(collect);
     }
 }

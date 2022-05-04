@@ -16,7 +16,7 @@ services:
       - postgres14_read2_data:/var/lib/postgresql/data
 
   read2:
-    image: 'demo22-v8'
+    image: 'read2-v1'
     container_name: read2
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres14_read2:5432/read2
