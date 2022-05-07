@@ -3,7 +3,9 @@ package app.web.pavelk.read2.controller;
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
 import app.web.pavelk.read2.service.PostService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +13,13 @@ import java.util.List;
 
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/posts")
 public class PostController {
 
-    private final PostService postService;
+    @Qualifier("postServiceFirstImpl")
+    @Autowired
+    private PostService postService;
 
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostRequestDto postRequestDto) {

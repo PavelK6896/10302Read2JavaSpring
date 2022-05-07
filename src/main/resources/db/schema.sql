@@ -18,12 +18,12 @@ create table if not exists client.token
 );
 create table if not exists client.users
 (
-    id       bigserial not null,
+    id       bigserial           not null,
     created  timestamp,
     email    varchar(255),
     enabled  boolean,
     password varchar(255),
-    username varchar(255),
+    username varchar(255) unique not null,
     primary key (id)
 );
 

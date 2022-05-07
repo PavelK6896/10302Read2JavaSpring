@@ -4,6 +4,7 @@ import app.web.pavelk.read2.config.SecurityConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,11 +36,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        boolean all = Stream.concat(Stream.concat(Arrays.stream(SecurityConfig.open_path),
-                                Arrays.stream(SecurityConfig.swagger_path)),
-                        Arrays.stream(SecurityConfig.open_path_get))
-                .anyMatch(f -> f.equals(request.getRequestURI()));
-
+        boolean all = Stream.concat(Arrays.stream(SecurityConfig.open_path),
+                        Arrays.stream(SecurityConfig.swagger_path))
+                .anyMatch(f -> request.getRequestURI().contains(f.replace("/**", "")));
+        if (request.getMethod().equals(HttpMethod.GET.name())) {
+            all = all || Arrays.stream(SecurityConfig.open_path_get)
+                    .anyMatch(f -> request.getRequestURI().contains(f.replace("/**", "")));
+        }
         String bearerToken = getJwtFromRequest(request);
 
         if (StringUtils.hasText(bearerToken) && !all) {
