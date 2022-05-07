@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.Tuple;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -23,5 +25,14 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     @Query("select sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)  " +
             "from Vote v where v.post = :post")
     Integer getCount(@Param("post") Post post);
+
+    @Query("select v.post.postId, " +
+            "( sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end) ) " +
+            "from Vote v where v.post.postId in (:postIds) group by v.post.postId ")
+    List<Tuple> findListPostIdVoteCount(List<Long> postIds);
+
+    @Query("select v.post.postId, v.voteType " +
+            "from Vote v where v.post.postId in (:postIds) and v.user.id = :userId group by v.post.postId, v.voteType ")
+    List<Tuple> findListTuplePostIdVoteType(List<Long> postIds, Long userId);
 
 }

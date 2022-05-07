@@ -4,6 +4,7 @@ import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.Subreddit;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.projection.PostResponseProjection;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -37,5 +38,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p.subreddit.id = :subredditId " +
             "group by p.postId, p.postName, p.description, p.user.username, p.subreddit.name, p.subreddit.id,  p.createdDate, v2.voteType")
     List<PostResponseProjection> findPostBySubredditId(Long subredditId, Long userId);
+
+    @EntityGraph(attributePaths = {"user", "subreddit"})
+    @Query("select p from Post p ")
+    List<Post> findAllEntityGraphAll();
 
 }
