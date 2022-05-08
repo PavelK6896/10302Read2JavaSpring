@@ -30,16 +30,17 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import static app.web.pavelk.read2.exceptions.UserAlreadyExists.SUCH_A_USER_ALREADY_EXISTS;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AuthService {
 
+    public static final String USER_REGISTRATION_SUCCESSFUL = "User registration successful.";
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
@@ -52,12 +53,12 @@ public class AuthService {
 
     @Transactional
     public ResponseEntity<String> signUp(RegisterRequest registerRequest) {
-        log.info("signUp");
+        log.debug("signUp {}", registerRequest);
         User setUser;
         Optional<User> byUsername = userRepository.findByUsername(registerRequest.getUsername());
         if (byUsername.isPresent()) {
             if (byUsername.get().isEnabled()) {
-                throw new UserAlreadyExists("Such a user already exists");
+                throw new UserAlreadyExists(SUCH_A_USER_ALREADY_EXISTS);
             } else {
                 setUser = byUsername.get();
             }
@@ -73,12 +74,15 @@ public class AuthService {
 
         userRepository.save(setUser);
         String token = generateVerificationToken(setUser);
-        mailService.sendMail(new NotificationEmail("Please Activate your Account",
-                setUser.getEmail(), "Thank you for signing up to Spring Reddit, " +
-                "please click on the below url to activate your account : " +
-                host + "/api/read2/api/auth/accountVerification/" + token));
 
-        return ResponseEntity.status(OK).body("User Registration Successful");
+        mailService.sendMail(NotificationEmail.builder()
+                .subject("Please Activate your Account")
+                .recipient(setUser.getEmail())
+                .body("Thank you for signing up to Spring Reddit, " +
+                        "please click on the below url to activate your account: " +
+                        host + "/api/read2/api/auth/accountVerification/" + token
+                ).build());
+        return ResponseEntity.status(OK).body(USER_REGISTRATION_SUCCESSFUL);
     }
 
     private String generateVerificationToken(User user) {

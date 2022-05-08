@@ -4,6 +4,7 @@ package app.web.pavelk.read2.service;
 import app.web.pavelk.read2.repository.UserRepository;
 import app.web.pavelk.read2.schema.User;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
+    @Getter
     private final Map<String, User> userMap = new ConcurrentHashMap<>();
 
     @Override
