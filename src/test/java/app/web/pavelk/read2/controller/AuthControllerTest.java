@@ -45,13 +45,13 @@ class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
     @Autowired
@@ -88,44 +88,33 @@ class AuthControllerTest {
 
     @Test
     void signUp1Right() throws Exception {
-
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email(email)
                 .password(password)
                 .username(username).build();
-
-        mockMvc.perform(
-                        post("/api/auth/signUp")
-                                .content(objectMapper.writeValueAsString(registerRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/auth/signUp")
+                        .content(objectMapper.writeValueAsString(registerRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("User registration successful."));
-
     }
-
 
     @Test
     void signUp2Wrong() throws Exception {
-
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email(email)
                 .build();
-
-        mockMvc.perform(
-                        post("/api/auth/signUp")
-                                .content(objectMapper.writeValueAsString(registerRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/auth/signUp")
+                        .content(objectMapper.writeValueAsString(registerRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(400))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-
-
     }
 
     @Test
     void accountVerification1Right() throws Exception {
-
         User user = userRepository.save(User.builder()
                 .id(1L)
                 .created(Instant.now())
@@ -133,15 +122,12 @@ class AuthControllerTest {
                 .username(username)
                 .password(password)
                 .build());
-
         verificationTokenRepository.save(VerificationToken.builder()
                 .id(1L)
                 .token("4412ced7-1faf-49b4-a05a-d1cee3c526af")
                 .user(user)
                 .build());
-
-        mockMvc.perform(
-                        get("/api/auth/accountVerification/4412ced7-1faf-49b4-a05a-d1cee3c526af"))
+        mockMvc.perform(get("/api/auth/accountVerification/4412ced7-1faf-49b4-a05a-d1cee3c526af"))
                 .andDo(print())
                 .andExpect(status().is(302))
                 .andExpect(header().exists("Location"));
@@ -149,8 +135,7 @@ class AuthControllerTest {
 
     @Test
     void accountVerification2Wrong() throws Exception {
-        mockMvc.perform(
-                        get("/api/auth/accountVerification/ljljljljlkjlk"))
+        mockMvc.perform(get("/api/auth/accountVerification/ljljljljlkjlk"))
                 .andDo(print())
                 .andExpect(status().is(403))
                 .andExpect(content().string("Invalid verification Token"));
@@ -169,10 +154,9 @@ class AuthControllerTest {
                 .username(username)
                 .password(password)
                 .build();
-        mockMvc.perform(
-                        post("/api/auth/login")
-                                .content(objectMapper.writeValueAsString(loginRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/auth/login")
+                        .content(objectMapper.writeValueAsString(loginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username", is(username)))
@@ -195,10 +179,9 @@ class AuthControllerTest {
                 .username(username)
                 .password(password)
                 .build();
-        mockMvc.perform(
-                        post("/api/auth/login")
-                                .content(objectMapper.writeValueAsString(loginRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/auth/login")
+                        .content(objectMapper.writeValueAsString(loginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(403))
                 .andExpect(result -> assertEquals("Bad credentials", result.getResponse().getErrorMessage()));
@@ -206,11 +189,13 @@ class AuthControllerTest {
 
     @Test
     void login3WrongPassword() throws Exception {
-        LoginRequest loginRequest = LoginRequest.builder().username(username).password(password).build();
-        mockMvc.perform(
-                        post("/api/auth/login")
-                                .content(objectMapper.writeValueAsString(loginRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
+        LoginRequest loginRequest = LoginRequest.builder()
+                .username(username)
+                .password(password)
+                .build();
+        mockMvc.perform(post("/api/auth/login")
+                        .content(objectMapper.writeValueAsString(loginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(404))
                 .andExpect(content().string("No user Found with username : " + username));
@@ -234,11 +219,9 @@ class AuthControllerTest {
                 .refreshToken(string)
                 .username(username)
                 .build();
-
-        mockMvc.perform(
-                        post("/api/auth/refresh/token")
-                                .content(objectMapper.writeValueAsString(refreshTokenRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/auth/refresh/token")
+                        .content(objectMapper.writeValueAsString(refreshTokenRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.username", is(username)))
@@ -255,10 +238,9 @@ class AuthControllerTest {
                 .refreshToken(string)
                 .username(username)
                 .build();
-        mockMvc.perform(
-                        post("/api/auth/refresh/token")
-                                .content(objectMapper.writeValueAsString(refreshTokenRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/auth/refresh/token")
+                        .content(objectMapper.writeValueAsString(refreshTokenRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(403))
                 .andExpect(content().string("Invalid refresh Token"));
@@ -276,10 +258,9 @@ class AuthControllerTest {
                 .refreshToken(string)
                 .username(username)
                 .build();
-        mockMvc.perform(
-                        post("/api/auth/logout")
-                                .content(objectMapper.writeValueAsString(refreshTokenRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/auth/logout")
+                        .content(objectMapper.writeValueAsString(refreshTokenRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().string("Refresh Token Deleted Successfully!"));

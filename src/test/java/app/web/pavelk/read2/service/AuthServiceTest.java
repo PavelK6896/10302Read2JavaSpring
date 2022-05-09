@@ -28,7 +28,6 @@ class AuthServiceTest {
     RefreshTokenService refreshTokenService = Mockito.mock(RefreshTokenService.class);
     UserDetailsServiceImpl userDetailsService = Mockito.mock(UserDetailsServiceImpl.class);
 
-
     @Test
     void userIsEnabledTrue() {
         AuthService authService = new AuthService(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService);
@@ -38,11 +37,11 @@ class AuthServiceTest {
                 .username("usernameReturn")
                 .build();
         when(userRepository.findByUsername(Mockito.any())).thenReturn(Optional.of(userReturn));
-
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email("email")
                 .password("password")
-                .username("username").build();
+                .username("username")
+                .build();
         Assertions.assertThrows(UserAlreadyExists.class, () -> {
             authService.signUp(registerRequest);
         });
@@ -57,11 +56,11 @@ class AuthServiceTest {
                 .username("usernameReturn")
                 .build();
         when(userRepository.findByUsername(Mockito.any())).thenReturn(Optional.of(userReturn));
-
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email("email")
                 .password("password")
-                .username("username").build();
+                .username("username")
+                .build();
         ResponseEntity<String> stringResponseEntity = authService.signUp(registerRequest);
         Assertions.assertEquals(OK, stringResponseEntity.getStatusCode());
     }
