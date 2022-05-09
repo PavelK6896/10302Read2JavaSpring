@@ -21,13 +21,23 @@ public interface PostMapper {
     @Mapping(target = "userName", source = "post.user.username")
     @Mapping(target = "subReadName", source = "post.subreddit.name")
     @Mapping(target = "subReadId", source = "post.subreddit.id")
-    @Mapping(target = "voteCount", expression = "java(mapContextPosts.getPostIdVoteCountMap().get(post.getPostId()))")
-    @Mapping(target = "commentCount", expression = "java(mapContextPosts.getPostIdCommentCountMap().get(post.getPostId()))")
+    @Mapping(target = "voteCount", expression = "java(getVoteCount(post, mapContextPosts))")
+    @Mapping(target = "commentCount", expression = "java(getCommentCount(post, mapContextPosts))")
     @Mapping(target = "vote", expression = "java(mapContextPosts.getPostIdVoteTypeMap().get(post.getPostId()))")
     PostResponseDto toDto(Post post, @Context MapContextPosts mapContextPosts);
 
     @IterableMapping(qualifiedByName = "posts")
     List<PostResponseDto> toDtoList(List<Post> source, @Context MapContextPosts mapContextPosts);
+
+    default Integer getVoteCount(Post post, MapContextPosts mapContextPosts) {
+        Integer voteCount = mapContextPosts.getPostIdVoteCountMap().get(post.getPostId());
+        return voteCount == null ? 0 : voteCount;
+    }
+
+    default Integer getCommentCount(Post post, MapContextPosts mapContextPosts) {
+        Integer commentCount = mapContextPosts.getPostIdCommentCountMap().get(post.getPostId());
+        return commentCount == null ? 0 : commentCount;
+    }
 
     @Data
     @Builder

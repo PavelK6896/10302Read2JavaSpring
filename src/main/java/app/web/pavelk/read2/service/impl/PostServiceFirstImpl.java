@@ -14,6 +14,8 @@ import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -56,6 +58,7 @@ public class PostServiceFirstImpl implements PostService {
     }
 
     private PostResponseDto getPostDto(Post post) {
+        Integer count = voteRepository.getCount(post);
         return PostResponseDto.builder()
                 .id(post.getPostId())
                 .postName(post.getPostName())
@@ -63,7 +66,7 @@ public class PostServiceFirstImpl implements PostService {
                 .userName(post.getUser().getUsername())
                 .subReadName(post.getSubreddit().getName())
                 .subReadId(post.getSubreddit().getId())
-                .voteCount(voteRepository.getCount(post))
+                .voteCount(count == null ? 0 : count)
                 .commentCount(commentRepository.findByPost(post).size())
                 .duration(post.getCreatedDate())
                 .vote(getVote(post)).build();
@@ -80,8 +83,9 @@ public class PostServiceFirstImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<PostResponseDto> collect = postRepository.findAll().stream().map(this::getPostDto).toList();
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        Page<PostResponseDto> collect = postRepository.findPage(pageable).map(this::getPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(collect);
     }
 

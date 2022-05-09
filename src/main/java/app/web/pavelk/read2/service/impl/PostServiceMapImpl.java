@@ -10,6 +10,9 @@ import app.web.pavelk.read2.service.PostService;
 import app.web.pavelk.read2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -43,9 +46,10 @@ public class PostServiceMapImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<Post> posts = postRepository.findAllEntityGraphAll();
-        List<Long> postIds = posts.stream().map(Post::getPostId).collect(Collectors.toList());
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        Page<Post> posts = postRepository.findPageEntityGraphAll(pageable);
+        List<Long> postIds = posts.getContent().stream().map(Post::getPostId).collect(Collectors.toList());
         Map<Long, Integer> postIdVoteCountMap = voteRepository.findListPostIdVoteCount(postIds).stream()
                 .collect(Collectors.toMap(f -> (Long) f.get(0), f -> ((Long) f.get(1)).intValue()));
         Map<Long, Integer> postIdCommentCountMap = commentRepository.findListTuplePostIdCommentCount(postIds).stream()
@@ -53,14 +57,14 @@ public class PostServiceMapImpl implements PostService {
         Map<Long, String> postIdVoteTypeMap = voteRepository.findListTuplePostIdVoteType(postIds, userService.getUserId()).stream()
                 .collect(Collectors.toMap(f -> (Long) f.get(0), f -> String.valueOf(f.get(1))));
 
-        PostMapper.MapContextPosts mapContextPosts = PostMapper.MapContextPosts
-                .builder()
+        PostMapper.MapContextPosts mapContextPosts = PostMapper.MapContextPosts.builder()
                 .postIdVoteCountMap(postIdVoteCountMap)
                 .postIdCommentCountMap(postIdCommentCountMap)
                 .postIdVoteTypeMap(postIdVoteTypeMap)
                 .build();
-        List<PostResponseDto> postResponseDtoList = postMapper.toDtoList(posts, mapContextPosts);
-        return ResponseEntity.status(HttpStatus.OK).body(postResponseDtoList);
+        List<PostResponseDto> postResponseDtoList = postMapper.toDtoList(posts.getContent(), mapContextPosts);
+        PageImpl<PostResponseDto> postResponseDto = new PageImpl<>(postResponseDtoList, posts.getPageable(), posts.getTotalPages());
+        return ResponseEntity.status(HttpStatus.OK).body(postResponseDto);
     }
 
 

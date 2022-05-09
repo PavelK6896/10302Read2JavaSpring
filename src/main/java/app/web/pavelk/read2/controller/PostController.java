@@ -1,11 +1,14 @@
 package app.web.pavelk.read2.controller;
 
+
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
 import app.web.pavelk.read2.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +30,8 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        return postService.getAllPosts();
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+        return postService.getAllPosts(pageable);
     }
 
     @GetMapping("/{id}")

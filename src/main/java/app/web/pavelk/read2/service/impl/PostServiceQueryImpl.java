@@ -1,5 +1,6 @@
 package app.web.pavelk.read2.service.impl;
 
+
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
 import app.web.pavelk.read2.repository.*;
@@ -8,12 +9,15 @@ import app.web.pavelk.read2.service.PostService;
 import app.web.pavelk.read2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
 
 @Slf4j(topic = "post-service-query")
 @Service
@@ -40,10 +44,12 @@ public class PostServiceQueryImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<PostResponseDto> postList = (List<PostResponseDto>) (List<?>) postRepository.findPostList(userService.getUserId());
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        Page<PostResponseDto> postList = (Page<PostResponseDto>) (Page<?>) postRepository.findPagePost(userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postList);
     }
+
 
     @Override
     @Transactional
