@@ -186,14 +186,14 @@ class PostControllerTest {
         mockMvc.perform(get("/api/posts"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].postName", is("post1")))
-                .andExpect(jsonPath("$[1].postName", is("post2")))
-                .andExpect(jsonPath("$[0].subReadName", is("name1")))
-                .andExpect(jsonPath("$[1].subReadName", is("name1")))
-                .andExpect(jsonPath("$[0].id", is(post1.getPostId().intValue())))
-                .andExpect(jsonPath("$[1].id", is(post2.getPostId().intValue())));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].postName", is("post1")))
+                .andExpect(jsonPath("$.content[1].postName", is("post2")))
+                .andExpect(jsonPath("$.content[0].subReadName", is("name1")))
+                .andExpect(jsonPath("$.content[1].subReadName", is("name1")))
+                .andExpect(jsonPath("$.content[0].id", is(post1.getPostId().intValue())))
+                .andExpect(jsonPath("$.content[1].id", is(post2.getPostId().intValue())));
     }
 
     @Test
