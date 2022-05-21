@@ -4,6 +4,9 @@ package app.web.pavelk.read2.controller;
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
 import app.web.pavelk.read2.service.PostService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +33,9 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+    @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
+    @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(@Parameter(hidden = true) Pageable pageable) {
         return postService.getAllPosts(pageable);
     }
 
