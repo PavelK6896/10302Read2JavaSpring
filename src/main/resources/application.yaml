@@ -44,3 +44,6 @@ spring:
 
 jwt:
   expiration: 1500
+
+qualifier:
+  post: PostServiceQueryImpl

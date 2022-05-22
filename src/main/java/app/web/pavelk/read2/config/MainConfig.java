@@ -1,5 +1,9 @@
 package app.web.pavelk.read2.config;
 
+import app.web.pavelk.read2.service.PostService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 public class MainConfig {
 
     @Bean
@@ -29,4 +34,13 @@ public class MainConfig {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return urlBasedCorsConfigurationSource;
     }
+
+    private final ApplicationContext applicationContext;
+
+    @Bean
+    public PostService postService(@Value("${qualifier.post:PostServiceFirstImpl}") String qualifier) {
+        String q = qualifier.substring(0, 1).toLowerCase() + qualifier.substring(1);
+        return (PostService) applicationContext.getBean(q);
+    }
+
 }
