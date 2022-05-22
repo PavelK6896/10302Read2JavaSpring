@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 public interface PostService extends CommonService {
 
     ResponseEntity<Void> createPost(PostRequestDto postRequestDto);
@@ -16,7 +14,7 @@ public interface PostService extends CommonService {
 
     ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable);
 
-    ResponseEntity<List<PostResponseDto>> getPostsBySubreddit(Long subredditId);
+    ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(Long subredditId, Pageable pageable);
 
-    ResponseEntity<List<PostResponseDto>> getPostsByUsername(String username);
+    ResponseEntity<Page<PostResponseDto>> getPostsByUsername(String username, Pageable pageable);
 }

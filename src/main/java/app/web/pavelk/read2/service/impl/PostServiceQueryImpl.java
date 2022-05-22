@@ -4,9 +4,8 @@ package app.web.pavelk.read2.service.impl;
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
 import app.web.pavelk.read2.mapper.PostMapper;
-import app.web.pavelk.read2.repository.*;
+import app.web.pavelk.read2.repository.PostRepository;
 import app.web.pavelk.read2.schema.projection.PostResponseProjection;
-import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.PostService;
 import app.web.pavelk.read2.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j(topic = "post-service-query")
 @Service
@@ -54,16 +52,17 @@ public class PostServiceQueryImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<List<PostResponseDto>> getPostsBySubreddit(Long subredditId) {
-        List<PostResponseDto> postBySubredditId = (List<PostResponseDto>) (List<?>) postRepository.findPostBySubredditId(subredditId, userService.getUserId());
+    public ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(Long subredditId, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        Page<PostResponseDto> postBySubredditId = (Page<PostResponseDto>) (Page<?>) postRepository.findPostBySubredditId(subredditId, userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postBySubredditId);
-
     }
 
     @Override
     @Transactional
-    public ResponseEntity<List<PostResponseDto>> getPostsByUsername(String username) {
-        List<PostResponseDto> postByUsername = (List<PostResponseDto>) (List<?>) postRepository.findPostByUsername(username, userService.getUserId());
+    public ResponseEntity<Page<PostResponseDto>> getPostsByUsername(String username, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        Page<PostResponseDto> postByUsername = (Page<PostResponseDto>) (Page<?>) postRepository.findPostByUsername(username, userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postByUsername);
     }
 

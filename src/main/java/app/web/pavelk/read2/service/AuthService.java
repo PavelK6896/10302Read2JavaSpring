@@ -144,7 +144,7 @@ public class AuthService {
 
     public boolean isLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null){
+        if (authentication == null) {
             return false;
         }
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();

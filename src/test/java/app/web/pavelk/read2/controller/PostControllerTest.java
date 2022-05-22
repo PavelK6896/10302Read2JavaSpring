@@ -291,7 +291,7 @@ class PostControllerTest {
         mockMvc.perform(get("/api/posts/by-subreddit/" + subreddit.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].postName", is("post")));
+                .andExpect(jsonPath("$.content[0].postName", is("post")));
     }
 
     @Test
@@ -336,8 +336,8 @@ class PostControllerTest {
         mockMvc.perform(get("/api/posts/by-user/" + username6))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].postName", is("getPostsByUsername1RightP")))
-                .andExpect(jsonPath("$[0].description", is("getPostsByUsername1RightD")));
+                .andExpect(jsonPath("$.content[0].postName", is("getPostsByUsername1RightP")))
+                .andExpect(jsonPath("$.content[0].description", is("getPostsByUsername1RightD")));
     }
 
     @Test

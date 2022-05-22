@@ -2,11 +2,13 @@ package app.web.pavelk.read2.service.impl;
 
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
+import app.web.pavelk.read2.exceptions.PostNotFoundException;
 import app.web.pavelk.read2.exceptions.SubredditNotFoundException;
 import app.web.pavelk.read2.mapper.PostMapper;
 import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.VoteType;
 import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.PostService;
 import app.web.pavelk.read2.service.UserService;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,6 +42,7 @@ public class PostServiceMapImpl implements PostService {
     private final UserService userService;
 
     @Override
+    @Transactional
     public ResponseEntity<Void> createPost(PostRequestDto postRequestDto) {
         Subreddit subreddit = subredditRepository
                 .findByName(postRequestDto.getSubReadName())
@@ -47,22 +51,60 @@ public class PostServiceMapImpl implements PostService {
                 .postName(postRequestDto.getPostName())
                 .description(postRequestDto.getDescription())
                 .createdDate(LocalDateTime.now())
-                .user(userService.getUser())
+                .user(authService.getCurrentUser())
                 .subreddit(subreddit)
                 .build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override
+    @Transactional
     public ResponseEntity<PostResponseDto> getPost(Long postId) {
-        return null;
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("Post not found id " + postId));
+        Integer count = voteRepository.getCount(post);
+        return ResponseEntity.status(HttpStatus.OK).body(PostResponseDto.builder()
+                .id(post.getPostId())
+                .postName(post.getPostName())
+                .description(post.getDescription())
+                .userName(post.getUser().getUsername())
+                .subReadName(post.getSubreddit().getName())
+                .subReadId(post.getSubreddit().getId())
+                .voteCount(count == null ? 0 : count)
+                .commentCount(commentRepository.findByPost(post).size())
+                .duration(post.getCreatedDate())
+                .vote(getVote(post)).build());
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<Post> posts = postRepository.findPageEntityGraphAll(pageable);
-        List<Long> postIds = posts.getContent().stream().map(Post::getPostId).collect(Collectors.toList());
+        PageImpl<PostResponseDto> postResponseDto = mapPostPage(posts);
+        return ResponseEntity.status(HttpStatus.OK).body(postResponseDto);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(Long subredditId, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        Page<Post> posts = postRepository.findAllBySubredditEntityGraphAll(subredditId, pageable);
+        PageImpl<PostResponseDto> postResponseDto = mapPostPage(posts);
+        return ResponseEntity.status(HttpStatus.OK).body(postResponseDto);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<Page<PostResponseDto>> getPostsByUsername(String username, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        Page<Post> posts = postRepository.findByUserEntityGraphAll(username, pageable);
+        PageImpl<PostResponseDto> postResponseDto = mapPostPage(posts);
+        return ResponseEntity.status(HttpStatus.OK).body(postResponseDto);
+    }
+
+    private PageImpl<PostResponseDto> mapPostPage(Page<Post> posts) {
+        List<Long> postIds = posts.getContent().stream().map(Post::getPostId).toList();
         Map<Long, Integer> postIdVoteCountMap = voteRepository.findListPostIdVoteCount(postIds).stream()
                 .collect(Collectors.toMap(f -> (Long) f.get(0), f -> ((Long) f.get(1)).intValue()));
         Map<Long, Integer> postIdCommentCountMap = commentRepository.findListTuplePostIdCommentCount(postIds).stream()
@@ -76,18 +118,15 @@ public class PostServiceMapImpl implements PostService {
                 .postIdVoteTypeMap(postIdVoteTypeMap)
                 .build();
         List<PostResponseDto> postResponseDtoList = postMapper.toDtoList(posts.getContent(), mapContextPosts);
-        PageImpl<PostResponseDto> postResponseDto = new PageImpl<>(postResponseDtoList, posts.getPageable(), posts.getTotalPages());
-        return ResponseEntity.status(HttpStatus.OK).body(postResponseDto);
+        return new PageImpl<>(postResponseDtoList, posts.getPageable(), posts.getTotalPages());
     }
 
-
-    @Override
-    public ResponseEntity<List<PostResponseDto>> getPostsBySubreddit(Long subredditId) {
+    private String getVote(Post post) {
+        if (authService.isLoggedIn()) {
+            return voteRepository.getTypeByUser(post, authService.getCurrentUser())
+                    .map(VoteType::toString).orElse(null);
+        }
         return null;
     }
 
-    @Override
-    public ResponseEntity<List<PostResponseDto>> getPostsByUsername(String username) {
-        return null;
-    }
 }

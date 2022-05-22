@@ -14,14 +14,25 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllBySubreddit(Subreddit subreddit);
 
+    Page<Post> findPageBySubreddit(Subreddit subreddit, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"user", "subreddit"})
+    @Query("select p from Post p where p.subreddit.id = :subredditId ")
+    Page<Post> findAllBySubredditEntityGraphAll(Long subredditId, Pageable pageable);
+
     List<Post> findByUser(User user);
+
+    Page<Post> findPageByUser(User user, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"user", "subreddit"})
+    @Query("select p from Post p where p.user.username = :username ")
+    Page<Post> findByUserEntityGraphAll(String username, Pageable pageable);
 
     @Query("select p from Post p ")
     Page<Post> findPage(Pageable pageable);
@@ -72,7 +83,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join Comment c on c.post.postId = p.postId " +
             "where p.subreddit.id = :subredditId " +
             "group by p.postId, p.postName, p.description, p.user.username, p.subreddit.name, p.subreddit.id,  p.createdDate, v2.voteType")
-    List<PostResponseProjection> findPostBySubredditId(Long subredditId, Long userId);
+    Page<PostResponseProjection> findPostBySubredditId(Long subredditId, Long userId, Pageable pageable);
 
     @Query("select p.postId as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subreddit.name as subReadName, p.subreddit.id as subReadId, " +
@@ -84,6 +95,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join Comment c on c.post.postId = p.postId " +
             "where p.user.username = :username " +
             "group by p.postId, p.postName, p.description, p.user.username, p.subreddit.name, p.subreddit.id,  p.createdDate, v2.voteType")
-    List<PostResponseProjection> findPostByUsername(String username, Long userId);
+    Page<PostResponseProjection> findPostByUsername(String username, Long userId, Pageable pageable);
 
 }

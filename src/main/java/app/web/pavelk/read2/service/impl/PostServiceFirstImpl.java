@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j(topic = "post-service-first")
 @Service
@@ -40,13 +39,58 @@ public class PostServiceFirstImpl implements PostService {
     @Override
     @Transactional
     public ResponseEntity<Void> createPost(PostRequestDto postRequestDto) {
-        log.info("createPost");
-        Subreddit subreddit = subredditRepository.findByName(postRequestDto.getSubReadName())
+        log.debug("createPost");
+        Subreddit subreddit = subredditRepository
+                .findByName(postRequestDto.getSubReadName())
                 .orElseThrow(() -> new SubredditNotFoundException("The sub is not found " + postRequestDto.getSubReadName()));
-
-        postRepository.save(Post.builder().postName(postRequestDto.getPostName()).description(postRequestDto.getDescription())
-                .createdDate(LocalDateTime.now()).user(authService.getCurrentUser()).subreddit(subreddit).build());
+        postRepository.save(Post.builder()
+                .postName(postRequestDto.getPostName())
+                .description(postRequestDto.getDescription())
+                .createdDate(LocalDateTime.now())
+                .user(authService.getCurrentUser())
+                .subreddit(subreddit)
+                .build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<PostResponseDto> getPost(Long id) {
+        log.debug("getPost");
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException("Post not found id " + id));
+        return ResponseEntity.status(HttpStatus.OK).body(getPostDto(post));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        Page<PostResponseDto> page = postRepository.findPage(pageable).map(this::getPostDto);
+        return ResponseEntity.status(HttpStatus.OK).body(page);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(Long subredditId, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        log.debug("getPostsBySubreddit");
+        Subreddit subreddit = subredditRepository.findById(subredditId)
+                .orElseThrow(() -> new SubredditNotFoundException("Subreddit not id " + subredditId));
+        Page<PostResponseDto> page = postRepository.findPageBySubreddit(subreddit, pageable).map(this::getPostDto);
+        return ResponseEntity.status(HttpStatus.OK).body(page);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<Page<PostResponseDto>> getPostsByUsername(String username, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        log.debug("getPostsBySubreddit");
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username Not Found " + username));
+        Page<PostResponseDto> page = postRepository.findPageByUser(user, pageable).map(this::getPostDto);
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     private String getVote(Post post) {
@@ -70,43 +114,5 @@ public class PostServiceFirstImpl implements PostService {
                 .commentCount(commentRepository.findByPost(post).size())
                 .duration(post.getCreatedDate())
                 .vote(getVote(post)).build();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ResponseEntity<PostResponseDto> getPost(Long id) {
-        log.info("getPost");
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException("Post not found id " + id));
-        return ResponseEntity.status(HttpStatus.OK).body(getPostDto(post));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
-        pageable = getDefaultPageable(pageable);
-        Page<PostResponseDto> collect = postRepository.findPage(pageable).map(this::getPostDto);
-        return ResponseEntity.status(HttpStatus.OK).body(collect);
-    }
-
-
-    @Override
-    @Transactional(readOnly = true)
-    public ResponseEntity<List<PostResponseDto>> getPostsBySubreddit(Long subredditId) {
-        log.info("getPostsBySubreddit");
-        Subreddit subreddit = subredditRepository.findById(subredditId)
-                .orElseThrow(() -> new SubredditNotFoundException("Subreddit not id " + subredditId));
-        List<PostResponseDto> collect = postRepository.findAllBySubreddit(subreddit).stream().map(this::getPostDto).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(collect);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ResponseEntity<List<PostResponseDto>> getPostsByUsername(String username) {
-        log.info("getPostsBySubreddit");
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username Not Found " + username));
-        List<PostResponseDto> collect = postRepository.findByUser(user).stream().map(this::getPostDto).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(collect);
     }
 }
