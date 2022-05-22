@@ -3,7 +3,9 @@ package app.web.pavelk.read2.service.impl;
 
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
+import app.web.pavelk.read2.mapper.PostMapper;
 import app.web.pavelk.read2.repository.*;
+import app.web.pavelk.read2.schema.projection.PostResponseProjection;
 import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.PostService;
 import app.web.pavelk.read2.service.UserService;
@@ -16,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Slf4j(topic = "post-service-query")
 @Service
@@ -25,21 +27,21 @@ import java.util.List;
 public class PostServiceQueryImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final SubredditRepository subredditRepository;
-    private final UserRepository userRepository;
-    private final AuthService authService;
-    private final CommentRepository commentRepository;
-    private final VoteRepository voteRepository;
     private final UserService userService;
+    private final PostMapper postMapper;
 
     @Override
+    @Transactional
     public ResponseEntity<Void> createPost(PostRequestDto postRequestDto) {
-        return null;
+        postRepository.insertPost(postRequestDto, userService.getUserId(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override
+    @Transactional
     public ResponseEntity<PostResponseDto> getPost(Long postId) {
-        return null;
+        PostResponseProjection post = postRepository.findPostResponseProjectionById(postId, userService.getUserId());
+        return ResponseEntity.status(HttpStatus.OK).body(postMapper.convertProjectionToDto(post));
     }
 
     @Override
@@ -50,7 +52,6 @@ public class PostServiceQueryImpl implements PostService {
         return ResponseEntity.status(HttpStatus.OK).body(postList);
     }
 
-
     @Override
     @Transactional
     public ResponseEntity<List<PostResponseDto>> getPostsBySubreddit(Long subredditId) {
@@ -60,8 +61,10 @@ public class PostServiceQueryImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<List<PostResponseDto>> getPostsByUsername(String username) {
-        return null;
+        List<PostResponseDto> postByUsername = (List<PostResponseDto>) (List<?>) postRepository.findPostByUsername(username, userService.getUserId());
+        return ResponseEntity.status(HttpStatus.OK).body(postByUsername);
     }
 
 }

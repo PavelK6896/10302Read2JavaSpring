@@ -2,9 +2,11 @@ package app.web.pavelk.read2.service.impl;
 
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
+import app.web.pavelk.read2.exceptions.SubredditNotFoundException;
 import app.web.pavelk.read2.mapper.PostMapper;
 import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Post;
+import app.web.pavelk.read2.schema.Subreddit;
 import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.PostService;
 import app.web.pavelk.read2.service.UserService;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,7 +40,17 @@ public class PostServiceMapImpl implements PostService {
 
     @Override
     public ResponseEntity<Void> createPost(PostRequestDto postRequestDto) {
-        return null;
+        Subreddit subreddit = subredditRepository
+                .findByName(postRequestDto.getSubReadName())
+                .orElseThrow(() -> new SubredditNotFoundException("The sub is not found " + postRequestDto.getSubReadName()));
+        postRepository.save(Post.builder()
+                .postName(postRequestDto.getPostName())
+                .description(postRequestDto.getDescription())
+                .createdDate(LocalDateTime.now())
+                .user(userService.getUser())
+                .subreddit(subreddit)
+                .build());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override

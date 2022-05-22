@@ -3,6 +3,7 @@ package app.web.pavelk.read2.mapper;
 
 import app.web.pavelk.read2.dto.PostResponseDto;
 import app.web.pavelk.read2.schema.Post;
+import app.web.pavelk.read2.schema.projection.PostResponseProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,4 +49,7 @@ public interface PostMapper {
         Map<Long, Integer> postIdCommentCountMap;
         Map<Long, String> postIdVoteTypeMap;
     }
+
+    PostResponseDto convertProjectionToDto(PostResponseProjection post);
+
 }

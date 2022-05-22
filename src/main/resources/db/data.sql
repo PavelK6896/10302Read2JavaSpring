@@ -62,7 +62,7 @@ WHERE NOT EXISTS(
 
 insert into post.post (created_date, description, post_name, vote_count, subreddit_id, user_id)
 select '2021-01-30 11:06:47.074138',
-       '<br/><p class="ql-indent-1"><span style="background-color: rgb(255, 255, 204);">Записать функцию в переменную.</span></p><pre class="ql-syntax ql-indent-2" spellcheck="false">val parse: (String) -&gt; List&lt;Int&gt; = { it.split(":").map(String::toInt) }</pre><p><br></p>',
+       '<br/><p class="ql-indent-1"><span style="background-color: rgb(50, 100, 150);">Записать функцию в переменную.</span></p><pre class="ql-syntax ql-indent-2" spellcheck="false">val parse: (String) -&gt; List&lt;Int&gt; = { it.split(":").map(String::toInt) }</pre><p><br></p>',
        'Функция в Kotlin.',
        null,
        2,

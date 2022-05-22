@@ -52,15 +52,30 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     @Override
     public Long getUserId() {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if ((authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
-                return null;
-            }
-            org.springframework.security.core.userdetails.User principal
-                    = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+            org.springframework.security.core.userdetails.User principal = getPrincipal();
+            if (principal == null) return null;
             return userMap.get(principal.getUsername()).getId();
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public User getUser() {
+        try {
+            org.springframework.security.core.userdetails.User principal = getPrincipal();
+            if (principal == null) return null;
+            return userMap.get(principal.getUsername());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private org.springframework.security.core.userdetails.User getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
+            return null;
+        }
+        return (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
     }
 }
