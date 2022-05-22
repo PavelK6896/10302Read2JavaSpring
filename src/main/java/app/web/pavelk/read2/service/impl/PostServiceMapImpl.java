@@ -78,7 +78,7 @@ public class PostServiceMapImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePosts(Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<Post> posts = postRepository.findPageEntityGraphAll(pageable);
         PageImpl<PostResponseDto> postResponseDto = mapPostPage(posts);
@@ -87,7 +87,7 @@ public class PostServiceMapImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(Long subredditId, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubreddit(Long subredditId, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<Post> posts = postRepository.findAllBySubredditEntityGraphAll(subredditId, pageable);
         PageImpl<PostResponseDto> postResponseDto = mapPostPage(posts);
@@ -96,7 +96,7 @@ public class PostServiceMapImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<Page<PostResponseDto>> getPostsByUsername(String username, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsByUsername(String username, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<Post> posts = postRepository.findByUserEntityGraphAll(username, pageable);
         PageImpl<PostResponseDto> postResponseDto = mapPostPage(posts);

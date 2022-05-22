@@ -44,7 +44,7 @@ public class PostServiceQueryImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePosts(Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<PostResponseDto> postList = (Page<PostResponseDto>) (Page<?>) postRepository.findPagePost(userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postList);
@@ -52,7 +52,7 @@ public class PostServiceQueryImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(Long subredditId, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubreddit(Long subredditId, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<PostResponseDto> postBySubredditId = (Page<PostResponseDto>) (Page<?>) postRepository.findPostBySubredditId(subredditId, userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postBySubredditId);
@@ -60,7 +60,7 @@ public class PostServiceQueryImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<Page<PostResponseDto>> getPostsByUsername(String username, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsByUsername(String username, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<PostResponseDto> postByUsername = (Page<PostResponseDto>) (Page<?>) postRepository.findPostByUsername(username, userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postByUsername);

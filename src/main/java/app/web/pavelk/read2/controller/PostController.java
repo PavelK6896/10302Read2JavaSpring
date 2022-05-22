@@ -36,7 +36,7 @@ public class PostController {
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
     @Operation(description = "get all posts")
     public ResponseEntity<Page<PostResponseDto>> getAllPosts(@Parameter(hidden = true) Pageable pageable) {
-        return postService.getAllPosts(pageable);
+        return postService.getPagePosts(pageable);
     }
 
     @GetMapping("/{id}")
@@ -50,7 +50,7 @@ public class PostController {
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
     @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(defaultValue = "1"))
     public ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(@PathVariable Long id, @Parameter(hidden = true) Pageable pageable) {
-        return postService.getPostsBySubreddit(id, pageable);
+        return postService.getPagePostsBySubreddit(id, pageable);
     }
 
     @GetMapping("by-user/{name}")
@@ -58,6 +58,6 @@ public class PostController {
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
     @Parameter(in = ParameterIn.PATH, name = "name", schema = @Schema(defaultValue = "admin"))
     public ResponseEntity<Page<PostResponseDto>> getPostsByUsername(@PathVariable String name, @Parameter(hidden = true) Pageable pageable) {
-        return postService.getPostsByUsername(name, pageable);
+        return postService.getPagePostsByUsername(name, pageable);
     }
 }

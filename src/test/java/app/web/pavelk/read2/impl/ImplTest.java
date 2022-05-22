@@ -61,9 +61,9 @@ class ImplTest {
     void getAllPosts() throws Exception {
 
         PageRequest of = PageRequest.of(0, 10, Sort.unsorted());
-        ResponseEntity<Page<PostResponseDto>> response1 = postServiceFirst.getAllPosts(of);
-        ResponseEntity<Page<PostResponseDto>> response2 = postServiceMap.getAllPosts(of);
-        ResponseEntity<Page<PostResponseDto>> response3 = postServiceQuery.getAllPosts(of);
+        ResponseEntity<Page<PostResponseDto>> response1 = postServiceFirst.getPagePosts(of);
+        ResponseEntity<Page<PostResponseDto>> response2 = postServiceMap.getPagePosts(of);
+        ResponseEntity<Page<PostResponseDto>> response3 = postServiceQuery.getPagePosts(of);
 
         String impl1 = objectMapper.writeValueAsString(response1);
         String impl2 = objectMapper.writeValueAsString(response2);
@@ -103,9 +103,9 @@ class ImplTest {
     void getPostsBySubreddit() throws Exception {
         PageRequest of = PageRequest.of(0, 10, Sort.unsorted());
 
-        ResponseEntity<Page<PostResponseDto>> response1 = postServiceFirst.getPostsBySubreddit(1L, of);
-        ResponseEntity<Page<PostResponseDto>> response2 = postServiceMap.getPostsBySubreddit(1L, of);
-        ResponseEntity<Page<PostResponseDto>> response3 = postServiceQuery.getPostsBySubreddit(1L, of);
+        ResponseEntity<Page<PostResponseDto>> response1 = postServiceFirst.getPagePostsBySubreddit(1L, of);
+        ResponseEntity<Page<PostResponseDto>> response2 = postServiceMap.getPagePostsBySubreddit(1L, of);
+        ResponseEntity<Page<PostResponseDto>> response3 = postServiceQuery.getPagePostsBySubreddit(1L, of);
         String impl1 = objectMapper.writeValueAsString(response1);
         String impl2 = objectMapper.writeValueAsString(response2);
         String impl3 = objectMapper.writeValueAsString(response3);
@@ -117,9 +117,9 @@ class ImplTest {
     void getPostsByUsername() throws Exception {
         PageRequest of = PageRequest.of(0, 10, Sort.unsorted());
         final String NAME = "Pavel";
-        ResponseEntity<Page<PostResponseDto>> response1 = postServiceFirst.getPostsByUsername(NAME, of);
-        ResponseEntity<Page<PostResponseDto>> response2 = postServiceFirst.getPostsByUsername(NAME, of);
-        ResponseEntity<Page<PostResponseDto>> response3 = postServiceQuery.getPostsByUsername(NAME, of);
+        ResponseEntity<Page<PostResponseDto>> response1 = postServiceFirst.getPagePostsByUsername(NAME, of);
+        ResponseEntity<Page<PostResponseDto>> response2 = postServiceFirst.getPagePostsByUsername(NAME, of);
+        ResponseEntity<Page<PostResponseDto>> response3 = postServiceQuery.getPagePostsByUsername(NAME, of);
         String impl1 = objectMapper.writeValueAsString(response1);
         String impl2 = objectMapper.writeValueAsString(response2);
         String impl3 = objectMapper.writeValueAsString(response3);

@@ -64,7 +64,7 @@ public class PostServiceFirstImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePosts(Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<PostResponseDto> page = postRepository.findPage(pageable).map(this::getPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(page);
@@ -73,7 +73,7 @@ public class PostServiceFirstImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(Long subredditId, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubreddit(Long subredditId, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         log.debug("getPostsBySubreddit");
         Subreddit subreddit = subredditRepository.findById(subredditId)
@@ -84,7 +84,7 @@ public class PostServiceFirstImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<Page<PostResponseDto>> getPostsByUsername(String username, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsByUsername(String username, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         log.debug("getPostsBySubreddit");
         User user = userRepository.findByUsername(username)
