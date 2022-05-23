@@ -1,5 +1,6 @@
 package app.web.pavelk.read2.config;
 
+import app.web.pavelk.read2.service.CommentService;
 import app.web.pavelk.read2.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,8 +40,17 @@ public class MainConfig {
 
     @Bean
     public PostService postService(@Value("${qualifier.post:PostServiceFirstImpl}") String qualifier) {
-        String q = qualifier.substring(0, 1).toLowerCase() + qualifier.substring(1);
-        return (PostService) applicationContext.getBean(q);
+        return (PostService) applicationContext.getBean(toLowerFirst(qualifier));
     }
+
+    @Bean
+    public CommentService commentService(@Value("${qualifier.comment:CommentServiceFirstImpl}") String qualifier) {
+        return (CommentService) applicationContext.getBean(toLowerFirst(qualifier));
+    }
+
+    private String toLowerFirst(String qualifier) {
+        return qualifier.substring(0, 1).toLowerCase() + qualifier.substring(1);
+    }
+
 
 }

@@ -20,4 +20,16 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "from Comment c where c.post.postId in (:postIds) group by c.post.postId ")
     List<Tuple> findListTuplePostIdCommentCount(List<Long> postIds);
 
+    @Query("select new app.web.pavelk.read2.dto.CommentsDto(c.id, c.post.postId, c.createdDate, c.text, c.user.username ) " +
+            "from Comment c where c.post.postId = :postId " +
+            "group by c.id, c.post.postId, c.createdDate, c.text, c.user.username " +
+            "order by c.createdDate desc ")
+    List<app.web.pavelk.read2.dto.CommentsDto> findCommentsDtoByPostId(Long postId);
+
+    @Query("select new app.web.pavelk.read2.dto.CommentsDto(c.id, c.post.postId, c.createdDate, c.text, c.user.username ) " +
+            "from Comment c where c.user.username = :username " +
+            "group by c.id, c.post.postId, c.createdDate, c.text, c.user.username " +
+            "order by c.createdDate desc ")
+    List<app.web.pavelk.read2.dto.CommentsDto> findCommentsDtoByUserName(String username);
+
 }

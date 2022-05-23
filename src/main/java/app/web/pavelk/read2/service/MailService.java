@@ -2,6 +2,7 @@ package app.web.pavelk.read2.service;
 
 import app.web.pavelk.read2.dto.NotificationEmail;
 import app.web.pavelk.read2.exceptions.SpringRedditException;
+import app.web.pavelk.read2.schema.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,9 +19,10 @@ import org.springframework.stereotype.Service;
 public class MailService {
 
     private final JavaMailSender javaMailSender;
-
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.username:}")
     public String email;
+    @Value("${app.notification:false}")
+    public boolean appNotification;
 
     @Async
     public void sendMail(NotificationEmail notificationEmail) {
@@ -42,10 +44,15 @@ public class MailService {
 
         try {
             javaMailSender.send(mimeMessagePreparator);
-            log.info("Activation email sent!");
         } catch (MailException e) {
             log.error("Exception occurred when sending mail", e);
             throw new SpringRedditException("Exception occurred when sending mail to " + notificationEmail.getRecipient(), e);
+        }
+    }
+
+    public void sendCommentNotification(String message, User user) {
+        if (appNotification) {
+            sendMail(new NotificationEmail(user.getUsername() + " Commented on your post", user.getEmail(), message));
         }
     }
 }
