@@ -2,7 +2,8 @@ package app.web.pavelk.read2.security;
 
 
 import app.web.pavelk.read2.dto.AuthenticationResponse;
-import app.web.pavelk.read2.exceptions.SpringRedditException;
+import app.web.pavelk.read2.exceptions.ExceptionMessage;
+import app.web.pavelk.read2.exceptions.SubReadException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -32,7 +33,7 @@ public class JwtProvider {
             InputStream resourceAsStream = getClass().getResourceAsStream("/key.jks");
             keyStore.load(resourceAsStream, "secret".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new SpringRedditException("Exception occurred while loading keystore", e);
+            throw new SubReadException(ExceptionMessage.INIT_JKS.getBodyEn(), e);
         }
     }
 
@@ -61,7 +62,7 @@ public class JwtProvider {
         try {
             return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            throw new SpringRedditException("Exception occurred while retrieving public key from keystore", e);
+            throw new SubReadException(ExceptionMessage.RETRIEVING_KEY.getBodyEn().formatted("private"), e);
         }
     }
 
@@ -69,8 +70,7 @@ public class JwtProvider {
         try {
             return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new SpringRedditException("Exception occurred while " +
-                    "retrieving public key from keystore", e);
+            throw new SubReadException(ExceptionMessage.RETRIEVING_KEY.getBodyEn().formatted("public"), e);
         }
     }
 

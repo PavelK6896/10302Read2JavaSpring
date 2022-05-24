@@ -2,7 +2,8 @@ package app.web.pavelk.read2.service;
 
 
 import app.web.pavelk.read2.dto.SubredditDto;
-import app.web.pavelk.read2.exceptions.SubredditNotFoundException;
+import app.web.pavelk.read2.exceptions.ExceptionMessage;
+import app.web.pavelk.read2.exceptions.SubReadException;
 import app.web.pavelk.read2.mapper.SubredditMapper;
 import app.web.pavelk.read2.repository.SubredditRepository;
 import app.web.pavelk.read2.schema.Subreddit;
@@ -44,7 +45,7 @@ public class SubReadService {
     public ResponseEntity<SubredditDto> getSubreddit(Long id) {
         log.info("getSubreddit");
         Subreddit subreddit = subredditRepository.findById(id)
-                .orElseThrow(() -> new SubredditNotFoundException("No subreddit found with ID - " + id));
+                .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(id)));
         return ResponseEntity.status(HttpStatus.OK).body(subredditMapper.mapSubredditToDto(subreddit));
     }
 }

@@ -1,7 +1,6 @@
-package app.web.pavelk.read2.controller;
+package app.web.pavelk.read2.exceptions;
 
 
-import app.web.pavelk.read2.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.DataException;
 import org.springframework.http.HttpStatus;
@@ -21,14 +20,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionController {
 
-
     @ExceptionHandler(UserAlreadyExists.class)
     public ResponseEntity<String> userAlreadyExists(Exception e) {
-        log.error(e.getMessage() + " Такой пользователь уже существует");
+        log.error(e.getMessage() + ExceptionMessage.USER_EXISTS.getBodyEn());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
-    @ExceptionHandler(SpringRedditException.class)
+    @ExceptionHandler(SubReadException.class)
     public ResponseEntity<String> springRedditException(Exception e) {
         log.error(e.getMessage() + " Ошибка");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -61,12 +59,6 @@ public class ExceptionController {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> usernameNotFoundException(Exception e) {
         log.error(e.getMessage() + " пользователь не найден");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-
-    @ExceptionHandler(SubredditNotFoundException.class)
-    public ResponseEntity<String> subredditNotFoundException(Exception e) {
-        log.error(e.getMessage() + " Подразделение не найдено");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 

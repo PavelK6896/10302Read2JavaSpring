@@ -1,7 +1,8 @@
 package app.web.pavelk.read2.service;
 
 import app.web.pavelk.read2.dto.NotificationEmail;
-import app.web.pavelk.read2.exceptions.SpringRedditException;
+import app.web.pavelk.read2.exceptions.ExceptionMessage;
+import app.web.pavelk.read2.exceptions.SubReadException;
 import app.web.pavelk.read2.schema.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +46,8 @@ public class MailService {
         try {
             javaMailSender.send(mimeMessagePreparator);
         } catch (MailException e) {
-            log.error("Exception occurred when sending mail", e);
-            throw new SpringRedditException("Exception occurred when sending mail to " + notificationEmail.getRecipient(), e);
+            log.error(ExceptionMessage.MAIL_SENDING.getBodyEn().formatted(notificationEmail.getRecipient()), e);
+            throw new SubReadException(ExceptionMessage.MAIL_SENDING.getBodyEn().formatted(notificationEmail.getRecipient()), e);
         }
     }
 

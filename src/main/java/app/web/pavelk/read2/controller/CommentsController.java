@@ -3,14 +3,14 @@ package app.web.pavelk.read2.controller;
 
 import app.web.pavelk.read2.dto.CommentsDto;
 import app.web.pavelk.read2.service.CommentService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/comments")
 public class CommentsController {
 

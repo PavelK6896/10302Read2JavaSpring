@@ -3,8 +3,9 @@ package app.web.pavelk.read2.service.impl;
 
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
+import app.web.pavelk.read2.exceptions.ExceptionMessage;
 import app.web.pavelk.read2.exceptions.PostNotFoundException;
-import app.web.pavelk.read2.exceptions.SubredditNotFoundException;
+import app.web.pavelk.read2.exceptions.SubReadException;
 import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.Subreddit;
@@ -42,7 +43,7 @@ public class PostServiceFirstImpl implements PostService {
         log.debug("createPost");
         Subreddit subreddit = subredditRepository
                 .findByName(postRequestDto.getSubReadName())
-                .orElseThrow(() -> new SubredditNotFoundException("The sub is not found " + postRequestDto.getSubReadName()));
+                .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(postRequestDto.getSubReadName())));
         postRepository.save(Post.builder()
                 .postName(postRequestDto.getPostName())
                 .description(postRequestDto.getDescription())
@@ -77,7 +78,7 @@ public class PostServiceFirstImpl implements PostService {
         pageable = getDefaultPageable(pageable);
         log.debug("getPostsBySubreddit");
         Subreddit subreddit = subredditRepository.findById(subredditId)
-                .orElseThrow(() -> new SubredditNotFoundException("Subreddit not id " + subredditId));
+                .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(subredditId)));
         Page<PostResponseDto> page = postRepository.findPageBySubreddit(subreddit, pageable).map(this::getPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
