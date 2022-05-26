@@ -1,9 +1,9 @@
 package app.web.pavelk.read2.mapper;
 
 
-import app.web.pavelk.read2.dto.SubredditDto;
+import app.web.pavelk.read2.dto.SubReadDto;
 import app.web.pavelk.read2.schema.Post;
-import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.SubRead;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,10 +11,10 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface SubredditMapper {
+public interface SubReadMapper {
 
-    @Mapping(target = "numberOfPosts", expression = "java(mapPosts(subreddit.getPosts()))")
-    SubredditDto mapSubredditToDto(Subreddit subreddit);
+    @Mapping(target = "numberOfPosts", expression = "java(mapPosts(subRead.getPosts()))")
+    SubReadDto mapSubReadToDto(SubRead subRead);
 
     default Integer mapPosts(List<Post> numberOfPosts) {
         return numberOfPosts.size();
@@ -22,7 +22,7 @@ public interface SubredditMapper {
 
     @InheritInverseConfiguration
     @Mapping(target = "posts", ignore = true)
-    Subreddit mapDtoToSubreddit(SubredditDto subredditDto);
+    SubRead mapDtoToSubRead(SubReadDto subReadDto);
 
 }
 

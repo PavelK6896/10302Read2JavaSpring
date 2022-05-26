@@ -34,7 +34,7 @@ public class PostController {
     @GetMapping
     @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
-    @Operation(description = "get all posts")
+    @Operation(description = "get page posts")
     public ResponseEntity<Page<PostResponseDto>> getAllPosts(@Parameter(hidden = true) Pageable pageable) {
         return postService.getPagePosts(pageable);
     }

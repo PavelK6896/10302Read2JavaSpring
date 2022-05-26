@@ -8,7 +8,7 @@ import app.web.pavelk.read2.exceptions.PostNotFoundException;
 import app.web.pavelk.read2.exceptions.SubReadException;
 import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Post;
-import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.VoteType;
 import app.web.pavelk.read2.service.AuthService;
@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 public class PostServiceFirstImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final SubredditRepository subredditRepository;
+    private final SubReadRepository subReadRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final CommentRepository commentRepository;
@@ -41,7 +41,7 @@ public class PostServiceFirstImpl implements PostService {
     @Transactional
     public ResponseEntity<Void> createPost(PostRequestDto postRequestDto) {
         log.debug("createPost");
-        Subreddit subreddit = subredditRepository
+        SubRead subRead = subReadRepository
                 .findByName(postRequestDto.getSubReadName())
                 .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(postRequestDto.getSubReadName())));
         postRepository.save(Post.builder()
@@ -49,7 +49,7 @@ public class PostServiceFirstImpl implements PostService {
                 .description(postRequestDto.getDescription())
                 .createdDate(LocalDateTime.now())
                 .user(authService.getCurrentUser())
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -77,9 +77,9 @@ public class PostServiceFirstImpl implements PostService {
     public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubreddit(Long subredditId, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         log.debug("getPostsBySubreddit");
-        Subreddit subreddit = subredditRepository.findById(subredditId)
+        SubRead subRead = subReadRepository.findById(subredditId)
                 .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(subredditId)));
-        Page<PostResponseDto> page = postRepository.findPageBySubreddit(subreddit, pageable).map(this::getPostDto);
+        Page<PostResponseDto> page = postRepository.findPageBySubreddit(subRead, pageable).map(this::getPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
@@ -109,8 +109,8 @@ public class PostServiceFirstImpl implements PostService {
                 .postName(post.getPostName())
                 .description(post.getDescription())
                 .userName(post.getUser().getUsername())
-                .subReadName(post.getSubreddit().getName())
-                .subReadId(post.getSubreddit().getId())
+                .subReadName(post.getSubRead().getName())
+                .subReadId(post.getSubRead().getId())
                 .voteCount(count == null ? 0 : count)
                 .commentCount(commentRepository.findByPost(post).size())
                 .duration(post.getCreatedDate())

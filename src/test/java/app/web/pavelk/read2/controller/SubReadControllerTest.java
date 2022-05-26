@@ -1,9 +1,9 @@
 package app.web.pavelk.read2.controller;
 
 import app.web.pavelk.read2.Read2;
-import app.web.pavelk.read2.dto.SubredditDto;
+import app.web.pavelk.read2.dto.SubReadDto;
 import app.web.pavelk.read2.repository.*;
-import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.service.MailService;
 import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +44,7 @@ class SubReadControllerTest {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private SubredditRepository subredditRepository;
+    private SubReadRepository subReadRepository;
     @Autowired
     private VoteRepository voteRepository;
     @Autowired
@@ -58,7 +58,7 @@ class SubReadControllerTest {
         voteRepository.deleteAll();
         commentRepository.deleteAll();
         postRepository.deleteAll();
-        subredditRepository.deleteAll();
+        subReadRepository.deleteAll();
         verificationTokenRepository.deleteAll();
         refreshTokenRepository.deleteAll();
         userRepository.deleteAll();
@@ -71,14 +71,14 @@ class SubReadControllerTest {
         Long id = 1L;
         String name = "createSubreddit1RightN";
         String description = "createSubreddit1RightD";
-        SubredditDto subredditDto = SubredditDto.builder()
+        SubReadDto subReadDto = SubReadDto.builder()
                 .id(id)
                 .name(name)
                 .description(description)
                 .numberOfPosts(1)
                 .build();
         mockMvc.perform(post("/api/subreddit")
-                        .content(objectMapper.writeValueAsString(subredditDto))
+                        .content(objectMapper.writeValueAsString(subReadDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(201));
@@ -88,14 +88,14 @@ class SubReadControllerTest {
     void createSubreddit2Wrong() throws Exception {
         Long id = 1L;
         String description = "createSubreddit2WrongD";
-        SubredditDto subredditDto = SubredditDto.builder()
+        SubReadDto subReadDto = SubReadDto.builder()
                 .id(id)
                 .name(null)
                 .description(description)
                 .numberOfPosts(1)
                 .build();
         mockMvc.perform(post("/api/subreddit")
-                        .content(objectMapper.writeValueAsString(subredditDto))
+                        .content(objectMapper.writeValueAsString(subReadDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(404))
@@ -108,11 +108,11 @@ class SubReadControllerTest {
         String name1 = "getAllSubreddits1Right1";
         String name2 = "getAllSubreddits1Right2";
         String description = "getAllSubreddits1RightD";
-        Subreddit subreddit1 = subredditRepository.save(Subreddit.builder()
+        SubRead subRead1 = subReadRepository.save(SubRead.builder()
                 .name(name1)
                 .description(description)
                 .build());
-        Subreddit subreddit2 = subredditRepository.save(Subreddit.builder()
+        SubRead subRead2 = subReadRepository.save(SubRead.builder()
                 .name(name2)
                 .description(description)
                 .build());
@@ -125,8 +125,8 @@ class SubReadControllerTest {
                 .andExpect(jsonPath("$[1].name", is(name2)))
                 .andExpect(jsonPath("$[0].description", is(description)))
                 .andExpect(jsonPath("$[1].description", is(description)))
-                .andExpect(jsonPath("$[0].id", is(subreddit1.getId().intValue())))
-                .andExpect(jsonPath("$[1].id", is(subreddit2.getId().intValue())));
+                .andExpect(jsonPath("$[0].id", is(subRead1.getId().intValue())))
+                .andExpect(jsonPath("$[1].id", is(subRead2.getId().intValue())));
     }
 
     @Test
@@ -142,16 +142,16 @@ class SubReadControllerTest {
     void getSubredditRight1() throws Exception {
         String name1 = "getSubreddit1Right";
         String description = "getSubreddit1RightD";
-        Subreddit subreddit1 = subredditRepository.save(Subreddit.builder()
+        SubRead subRead1 = subReadRepository.save(SubRead.builder()
                 .name(name1)
                 .description(description)
                 .build());
-        mockMvc.perform(get("/api/subreddit/" + subreddit1.getId()))
+        mockMvc.perform(get("/api/subreddit/" + subRead1.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(name1)))
                 .andExpect(jsonPath("$.description", is(description)))
-                .andExpect(jsonPath("$.id", is(subreddit1.getId().intValue())));
+                .andExpect(jsonPath("$.id", is(subRead1.getId().intValue())));
     }
 
     @Test

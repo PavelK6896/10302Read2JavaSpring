@@ -19,8 +19,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "subreddit", schema = "post")
-public class Subreddit {
+@Table(name = "sub_read", schema = "post")
+public class SubRead {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -46,8 +46,8 @@ public class Subreddit {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Subreddit subreddit = (Subreddit) o;
-        return id != null && Objects.equals(id, subreddit.id);
+        SubRead subRead = (SubRead) o;
+        return id != null && Objects.equals(id, subRead.id);
     }
 
     @Override

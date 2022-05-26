@@ -2,7 +2,7 @@ package app.web.pavelk.read2.repository;
 
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.schema.Post;
-import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.projection.PostResponseProjection;
 import org.springframework.data.domain.Page;
@@ -18,9 +18,9 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllBySubreddit(Subreddit subreddit);
+    List<Post> findAllBySubreddit(SubRead subRead);
 
-    Page<Post> findPageBySubreddit(Subreddit subreddit, Pageable pageable);
+    Page<Post> findPageBySubreddit(SubRead subRead, Pageable pageable);
 
     @EntityGraph(attributePaths = {"user", "subreddit"})
     @Query("select p from Post p where p.subreddit.id = :subredditId ")

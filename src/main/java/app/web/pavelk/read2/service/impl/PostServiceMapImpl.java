@@ -8,7 +8,7 @@ import app.web.pavelk.read2.exceptions.SubReadException;
 import app.web.pavelk.read2.mapper.PostMapper;
 import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Post;
-import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.schema.VoteType;
 import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.PostService;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class PostServiceMapImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final SubredditRepository subredditRepository;
+    private final SubReadRepository subReadRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final CommentRepository commentRepository;
@@ -45,7 +45,7 @@ public class PostServiceMapImpl implements PostService {
     @Override
     @Transactional
     public ResponseEntity<Void> createPost(PostRequestDto postRequestDto) {
-        Subreddit subreddit = subredditRepository
+        SubRead subRead = subReadRepository
                 .findByName(postRequestDto.getSubReadName())
                 .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(postRequestDto.getSubReadName())));
         postRepository.save(Post.builder()
@@ -53,7 +53,7 @@ public class PostServiceMapImpl implements PostService {
                 .description(postRequestDto.getDescription())
                 .createdDate(LocalDateTime.now())
                 .user(authService.getCurrentUser())
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -69,8 +69,8 @@ public class PostServiceMapImpl implements PostService {
                 .postName(post.getPostName())
                 .description(post.getDescription())
                 .userName(post.getUser().getUsername())
-                .subReadName(post.getSubreddit().getName())
-                .subReadId(post.getSubreddit().getId())
+                .subReadName(post.getSubRead().getName())
+                .subReadId(post.getSubRead().getId())
                 .voteCount(count == null ? 0 : count)
                 .commentCount(commentRepository.findByPost(post).size())
                 .duration(post.getCreatedDate())

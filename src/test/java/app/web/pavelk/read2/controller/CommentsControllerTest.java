@@ -6,7 +6,7 @@ import app.web.pavelk.read2.dto.CommentsDto;
 import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Comment;
 import app.web.pavelk.read2.schema.Post;
-import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.service.MailService;
 import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
@@ -53,7 +53,7 @@ class CommentsControllerTest {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private SubredditRepository subredditRepository;
+    private SubReadRepository subReadRepository;
     @Autowired
     private VoteRepository voteRepository;
     @Autowired
@@ -67,7 +67,7 @@ class CommentsControllerTest {
         voteRepository.deleteAll();
         commentRepository.deleteAll();
         postRepository.deleteAll();
-        subredditRepository.deleteAll();
+        subReadRepository.deleteAll();
         verificationTokenRepository.deleteAll();
         refreshTokenRepository.deleteAll();
         userRepository.deleteAll();
@@ -89,7 +89,7 @@ class CommentsControllerTest {
                 .password(passwordEncoder.encode(password))
                 .enabled(true)
                 .build());
-        Subreddit subreddit = subredditRepository.save(Subreddit.builder()
+        SubRead subRead = subReadRepository.save(SubRead.builder()
                 .description("d1")
                 .name("name1")
                 .user(user)
@@ -100,7 +100,7 @@ class CommentsControllerTest {
                 .user(user)
                 .description("11")
                 .voteCount(0)
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         CommentsDto commentsDto = CommentsDto.builder()
                 .createdDate(Instant.now())
@@ -137,7 +137,7 @@ class CommentsControllerTest {
     @Test
     @WithMockUser(username = username2)
     void createComment3WrongUsernameNotFoundException() throws Exception {
-        Subreddit subreddit = subredditRepository.save(Subreddit.builder()
+        SubRead subRead = subReadRepository.save(SubRead.builder()
                 .description("d1")
                 .name("name1")
                 .user(null)
@@ -148,7 +148,7 @@ class CommentsControllerTest {
                 .user(null)
                 .description("11")
                 .voteCount(0)
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         CommentsDto comment1 = CommentsDto.builder()
                 .createdDate(Instant.now())

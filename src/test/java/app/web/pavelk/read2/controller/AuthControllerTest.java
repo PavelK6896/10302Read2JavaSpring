@@ -59,7 +59,7 @@ class AuthControllerTest {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private SubredditRepository subredditRepository;
+    private SubReadRepository subReadRepository;
     @Autowired
     private VoteRepository voteRepository;
     @Autowired
@@ -74,7 +74,7 @@ class AuthControllerTest {
         voteRepository.deleteAll();
         commentRepository.deleteAll();
         postRepository.deleteAll();
-        subredditRepository.deleteAll();
+        subReadRepository.deleteAll();
         verificationTokenRepository.deleteAll();
         refreshTokenRepository.deleteAll();
         userRepository.deleteAll();

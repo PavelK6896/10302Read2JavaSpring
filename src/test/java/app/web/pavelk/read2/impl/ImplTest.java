@@ -2,7 +2,7 @@ package app.web.pavelk.read2.impl;
 
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
-import app.web.pavelk.read2.repository.SubredditRepository;
+import app.web.pavelk.read2.repository.SubReadRepository;
 import app.web.pavelk.read2.service.impl.PostServiceFirstImpl;
 import app.web.pavelk.read2.service.impl.PostServiceMapImpl;
 import app.web.pavelk.read2.service.impl.PostServiceQueryImpl;
@@ -46,7 +46,7 @@ class ImplTest {
     @Autowired
     private PostServiceQueryImpl postServiceQuery;
     @Autowired
-    private SubredditRepository subredditRepository;
+    private SubReadRepository subReadRepository;
 
     @Container
     public static GenericContainer<?> postgres = new GenericContainer<>(DockerImageName.parse("postgres:14")).withExposedPorts(5432).withEnv("POSTGRES_USER", "postgres").withEnv("POSTGRES_PASSWORD", "postgres").withEnv("POSTGRES_DB", "read2");

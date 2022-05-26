@@ -4,7 +4,7 @@ import app.web.pavelk.read2.Read2;
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Post;
-import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.service.MailService;
 import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
@@ -53,7 +53,7 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private SubredditRepository subredditRepository;
+    private SubReadRepository subReadRepository;
     @Autowired
     private VoteRepository voteRepository;
     @Autowired
@@ -67,7 +67,7 @@ class PostControllerTest {
         voteRepository.deleteAll();
         commentRepository.deleteAll();
         postRepository.deleteAll();
-        subredditRepository.deleteAll();
+        subReadRepository.deleteAll();
         verificationTokenRepository.deleteAll();
         refreshTokenRepository.deleteAll();
         userRepository.deleteAll();
@@ -93,7 +93,7 @@ class PostControllerTest {
                 .password(passwordEncoder.encode(password1))
                 .enabled(true)
                 .build());
-        subredditRepository.save(Subreddit.builder()
+        subReadRepository.save(SubRead.builder()
                 .description("d1")
                 .name(subredditName)
                 .user(user)
@@ -129,7 +129,7 @@ class PostControllerTest {
     @Test
     void createPost3Wrong() throws Exception {
         String subredditName = "nameSub2";
-        Subreddit subreddit = subredditRepository.save(Subreddit.builder()
+        SubRead subRead = subReadRepository.save(SubRead.builder()
                 .description("d1")
                 .name(subredditName)
                 .user(null)
@@ -144,7 +144,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(404));
-        subredditRepository.delete(subreddit);
+        subReadRepository.delete(subRead);
     }
 
     @Test
@@ -160,7 +160,7 @@ class PostControllerTest {
                 .password(passwordEncoder.encode(password1))
                 .enabled(true)
                 .build());
-        Subreddit subreddit = subredditRepository.save(Subreddit.builder()
+        SubRead subRead = subReadRepository.save(SubRead.builder()
                 .description("d1")
                 .name("name1")
                 .user(user)
@@ -172,7 +172,7 @@ class PostControllerTest {
                 .user(user)
                 .description("d1")
                 .voteCount(10)
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         Post post2 = postRepository.save(Post.builder()
                 .createdDate(LocalDateTime.now())
@@ -181,7 +181,7 @@ class PostControllerTest {
                 .user(user)
                 .description("d2")
                 .voteCount(20)
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         mockMvc.perform(get("/api/posts"))
                 .andDo(print())
@@ -205,7 +205,7 @@ class PostControllerTest {
                 .user(null)
                 .description("d2")
                 .voteCount(20)
-                .subreddit(null)
+                .subRead(null)
                 .build());
         mockMvc.perform(get("/api/posts"))
                 .andDo(print())
@@ -224,7 +224,7 @@ class PostControllerTest {
                 .password(passwordEncoder.encode(password1))
                 .enabled(true)
                 .build());
-        Subreddit subreddit = subredditRepository.save(Subreddit.builder()
+        SubRead subRead = subReadRepository.save(SubRead.builder()
                 .description("d1")
                 .name("subReadName1")
                 .user(user)
@@ -237,7 +237,7 @@ class PostControllerTest {
                 .user(user)
                 .description("description1")
                 .voteCount(20)
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         mockMvc.perform(get("/api/posts/" + post.getPostId().intValue()))
                 .andDo(print())
@@ -273,7 +273,7 @@ class PostControllerTest {
                 .password(passwordEncoder.encode(password1))
                 .enabled(true)
                 .build());
-        Subreddit subreddit = subredditRepository.save(Subreddit.builder()
+        SubRead subRead = subReadRepository.save(SubRead.builder()
                 .id(subredditId)
                 .description("d1")
                 .name(subredditName)
@@ -286,9 +286,9 @@ class PostControllerTest {
                 .user(user)
                 .description("description1")
                 .voteCount(20)
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
-        mockMvc.perform(get("/api/posts/by-subreddit/" + subreddit.getId()))
+        mockMvc.perform(get("/api/posts/by-subreddit/" + subRead.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].postName", is("post")));
@@ -318,7 +318,7 @@ class PostControllerTest {
                 .password(passwordEncoder.encode(password1))
                 .enabled(true)
                 .build());
-        Subreddit subreddit = subredditRepository.save(Subreddit.builder()
+        SubRead subRead = subReadRepository.save(SubRead.builder()
                 .id(subredditId)
                 .description("d1")
                 .name(subredditName)
@@ -331,7 +331,7 @@ class PostControllerTest {
                 .user(user)
                 .description("getPostsByUsername1RightD")
                 .voteCount(20)
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         mockMvc.perform(get("/api/posts/by-user/" + username6))
                 .andDo(print())

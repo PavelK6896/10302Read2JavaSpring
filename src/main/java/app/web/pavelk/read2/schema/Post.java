@@ -39,9 +39,9 @@ public class Post {
     private User user;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "subreddit_id")
+    @JoinColumn(name = "sub_read")
     @ToString.Exclude
-    private Subreddit subreddit;
+    private SubRead subRead;
 
     @Override
     public boolean equals(Object o) {

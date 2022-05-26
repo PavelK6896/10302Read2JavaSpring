@@ -4,7 +4,7 @@ import app.web.pavelk.read2.Read2;
 import app.web.pavelk.read2.dto.VoteDto;
 import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Post;
-import app.web.pavelk.read2.schema.Subreddit;
+import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.VoteType;
 import app.web.pavelk.read2.service.MailService;
@@ -51,7 +51,7 @@ class VoteControllerTest {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private SubredditRepository subredditRepository;
+    private SubReadRepository subReadRepository;
     @Autowired
     private VoteRepository voteRepository;
     @Autowired
@@ -65,7 +65,7 @@ class VoteControllerTest {
         voteRepository.deleteAll();
         commentRepository.deleteAll();
         postRepository.deleteAll();
-        subredditRepository.deleteAll();
+        subReadRepository.deleteAll();
         verificationTokenRepository.deleteAll();
         refreshTokenRepository.deleteAll();
         userRepository.deleteAll();
@@ -88,7 +88,7 @@ class VoteControllerTest {
                 .password(passwordEncoder.encode(password1))
                 .enabled(true)
                 .build());
-        Subreddit subreddit = subredditRepository.save(Subreddit.builder()
+        SubRead subRead = subReadRepository.save(SubRead.builder()
                 .description(description)
                 .name(name)
                 .user(user)
@@ -99,7 +99,7 @@ class VoteControllerTest {
                 .user(user)
                 .description("d1")
                 .voteCount(10)
-                .subreddit(subreddit)
+                .subRead(subRead)
                 .build());
         VoteDto voteDto = VoteDto.builder()
                 .voteType(VoteType.UP_VOTE)

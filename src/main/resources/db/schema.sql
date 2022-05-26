@@ -43,11 +43,11 @@ create table if not exists post.post
     description  text,
     post_name    varchar(255),
     vote_count   int4,
-    subreddit_id int8,
+    sub_read_id  int8,
     user_id      int8,
     primary key (post_id)
 );
-create table if not exists post.subreddit
+create table if not exists post.sub_read
 (
     id           bigserial not null,
     created_date timestamp,
@@ -66,7 +66,7 @@ create table if not exists post.vote
 );
 create table if not exists subreddit_posts
 (
-    subreddit_id  int8 not null,
+    sub_read_id   int8 not null,
     posts_post_id int8 not null
 );
 
@@ -100,8 +100,8 @@ alter table post.post
 
 alter table if exists post.post
     add constraint FKmlnoks6ujgl9ynt53af0bx4pj
-        foreign key (subreddit_id)
-            references post.subreddit;
+        foreign key (sub_read_id)
+            references post.sub_read;
 
 alter table post.post
     drop constraint if exists FK7ky67sgi7k0ayf22652f7763r;
@@ -111,10 +111,10 @@ alter table if exists post.post
         foreign key (user_id)
             references client.users;
 
-alter table post.subreddit
+alter table post.sub_read
     drop constraint if exists FK1umuh48cq77u6i52atb21shci;
 
-alter table if exists post.subreddit
+alter table if exists post.sub_read
     add constraint FK1umuh48cq77u6i52atb21shci
         foreign key (user_id)
             references client.users;
@@ -158,5 +158,5 @@ alter table subreddit_posts
 
 alter table subreddit_posts
     add constraint FK1plpyiqs72shw84g90q0fes5r
-        foreign key (subreddit_id)
-            references post.subreddit;
+        foreign key (sub_read_id)
+            references post.sub_read;
