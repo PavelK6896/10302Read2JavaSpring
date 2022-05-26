@@ -1,8 +1,9 @@
-package app.web.pavelk.read2.service;
+package app.web.pavelk.read2.service.impl;
 
 
 import app.web.pavelk.read2.repository.UserRepository;
 import app.web.pavelk.read2.schema.User;
+import app.web.pavelk.read2.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -78,4 +79,17 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         }
         return (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
     }
+
+    @Override
+    public boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+        if ((authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
+            return false;
+        }
+        return authentication.isAuthenticated();
+    }
+
 }

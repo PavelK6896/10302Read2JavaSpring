@@ -97,14 +97,14 @@ public class AuthService {
         return token;
     }
 
+    @Transactional
     public ResponseEntity<Void> verifyAccount(String token) {
-        log.info("verifyAccount");
+        log.debug("verifyAccount");
         fetchUserAndEnable(verificationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Invalid verification Token")));
         return ResponseEntity.status(FOUND).header("Location", host + "/read2").build();
     }
 
-    @Transactional
     public void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
         User user = userRepository.findByUsername(username)

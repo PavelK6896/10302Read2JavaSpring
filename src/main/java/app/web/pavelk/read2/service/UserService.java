@@ -7,4 +7,7 @@ public interface UserService {
     Long getUserId();
 
     User getUser();
+
+    boolean isAuthenticated();
+
 }

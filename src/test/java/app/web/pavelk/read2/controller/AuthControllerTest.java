@@ -9,7 +9,7 @@ import app.web.pavelk.read2.schema.RefreshToken;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.VerificationToken;
 import app.web.pavelk.read2.service.MailService;
-import app.web.pavelk.read2.service.UserDetailsServiceImpl;
+import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

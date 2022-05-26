@@ -25,17 +25,19 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public RefreshToken generateRefreshToken() {
+        log.debug("generateRefreshToken");
         return refreshTokenRepository.save(RefreshToken.builder()
                 .createdDate(Instant.now()).token(UUID.randomUUID().toString()).build());
     }
 
     public RefreshToken validateRefreshToken(String token) {
+        log.debug("validateRefreshToken");
         return refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Invalid refresh Token"));
     }
 
     public ResponseEntity<String> deleteRefreshToken(String token) {
-        log.info("deleteRefreshToken");
+        log.debug("deleteRefreshToken");
         refreshTokenRepository.deleteByToken(token);
         return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!");
     }

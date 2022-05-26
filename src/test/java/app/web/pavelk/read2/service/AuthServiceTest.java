@@ -6,6 +6,7 @@ import app.web.pavelk.read2.repository.UserRepository;
 import app.web.pavelk.read2.repository.VerificationTokenRepository;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.security.JwtProvider;
+import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

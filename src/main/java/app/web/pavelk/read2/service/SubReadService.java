@@ -26,24 +26,22 @@ public class SubReadService {
 
     @Transactional
     public ResponseEntity<SubredditDto> save(SubredditDto subredditDto) {
-        log.info("createSubreddit");
-
+        log.debug("createSubreddit");
         Subreddit save = subredditRepository.save(subredditMapper.mapDtoToSubreddit(subredditDto));
-
         subredditDto.setId(save.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(subredditDto);
     }
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<SubredditDto>> getAll() {
-        log.info("getAllSubreddits");
+        log.debug("getAllSubreddits");
         return ResponseEntity.status(HttpStatus.OK).body(subredditRepository.findAll()
                 .stream()
                 .map(subredditMapper::mapSubredditToDto).toList());
     }
 
     public ResponseEntity<SubredditDto> getSubreddit(Long id) {
-        log.info("getSubreddit");
+        log.debug("getSubreddit");
         Subreddit subreddit = subredditRepository.findById(id)
                 .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(id)));
         return ResponseEntity.status(HttpStatus.OK).body(subredditMapper.mapSubredditToDto(subreddit));

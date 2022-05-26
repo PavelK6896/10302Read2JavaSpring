@@ -7,7 +7,7 @@ import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.Subreddit;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.service.MailService;
-import app.web.pavelk.read2.service.UserDetailsServiceImpl;
+import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
