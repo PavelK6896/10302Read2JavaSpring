@@ -18,46 +18,50 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/posts")
+@RequestMapping("/post")
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping
-    @Operation(description = "create post",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "post body", required = true,
-                    content = @Content(schema = @Schema(implementation = PostRequestDto.class))))
-    public ResponseEntity<Void> createPost(@RequestBody PostRequestDto postRequestDto) {
-        return postService.createPost(postRequestDto);
-    }
-
-    @GetMapping
-    @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
-    @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
-    @Operation(description = "get page posts")
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(@Parameter(hidden = true) Pageable pageable) {
-        return postService.getPagePosts(pageable);
-    }
-
-    @GetMapping("/{id}")
+    @Operation(description = "Get post by id.")
     @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(defaultValue = "1"))
+    @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long id) {
         return postService.getPost(id);
     }
 
-    @GetMapping("by-subreddit/{id}")
+    @Operation(description = "Get page post.")
     @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
-    @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(defaultValue = "1"))
-    public ResponseEntity<Page<PostResponseDto>> getPostsBySubreddit(@PathVariable Long id, @Parameter(hidden = true) Pageable pageable) {
-        return postService.getPagePostsBySubreddit(id, pageable);
+    @GetMapping
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(@Parameter(hidden = true) Pageable pageable) {
+        return postService.getPagePosts(pageable);
     }
 
-    @GetMapping("by-user/{name}")
+    @Operation(description = "Get page post by sub read id.")
     @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
-    @Parameter(in = ParameterIn.PATH, name = "name", schema = @Schema(defaultValue = "admin"))
-    public ResponseEntity<Page<PostResponseDto>> getPostsByUsername(@PathVariable String name, @Parameter(hidden = true) Pageable pageable) {
-        return postService.getPagePostsByUsername(name, pageable);
+    @Parameter(in = ParameterIn.PATH, name = "subReadId", schema = @Schema(defaultValue = "1"))
+    @GetMapping("by-sub-read/{subReadId}")
+    public ResponseEntity<Page<PostResponseDto>> getPagePostBySubReadId(@PathVariable Long subReadId, @Parameter(hidden = true) Pageable pageable) {
+        return postService.getPagePostsBySubReadId(subReadId, pageable);
     }
+
+    @Operation(description = "Get page post by user name.")
+    @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
+    @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
+    @Parameter(in = ParameterIn.PATH, name = "userName", schema = @Schema(defaultValue = "admin"))
+    @GetMapping("by-user/{userName}")
+    public ResponseEntity<Page<PostResponseDto>> getPagePostByUsername(@PathVariable String userName, @Parameter(hidden = true) Pageable pageable) {
+        return postService.getPagePostsByUsername(userName, pageable);
+    }
+
+    @Operation(description = "Create post.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "post body", required = true,
+                    content = @Content(schema = @Schema(implementation = PostRequestDto.class))))
+    @PostMapping
+    public ResponseEntity<Void> createPost(@RequestBody PostRequestDto postRequestDto) {
+        return postService.createPost(postRequestDto);
+    }
+
 }

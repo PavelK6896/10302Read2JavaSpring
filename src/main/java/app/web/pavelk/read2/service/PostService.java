@@ -42,7 +42,7 @@ public interface PostService extends CommonService {
      * @param pageable    page property
      * @return page posts dto
      */
-    ResponseEntity<Page<PostResponseDto>> getPagePostsBySubreddit(Long subredditId, Pageable pageable);
+    ResponseEntity<Page<PostResponseDto>> getPagePostsBySubReadId(Long subredditId, Pageable pageable);
 
     /**
      * Get page post by username.

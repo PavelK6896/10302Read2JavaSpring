@@ -17,9 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    public static final String[] open_path_get = {"/api/subreddit/**", "/api/posts/**", "/api/comments/by-post/**"};
+    public static final String[] open_path_get = {"/sub-read/**", "/posts/**", "/comments/by-post/**"};
     public static final String[] swagger_path = {"/v3/api-docs/**", "/swagger-ui/**"};
-    public static final String[] open_path = {"/api/auth/**"};
+    public static final String[] open_path = {"/auth/**"};
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {

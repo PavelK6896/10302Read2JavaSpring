@@ -52,7 +52,7 @@ public class PostServiceQueryImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubreddit(Long subredditId, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubReadId(Long subredditId, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<PostResponseDto> postBySubredditId = (Page<PostResponseDto>) (Page<?>) postRepository.findPostBySubredditId(subredditId, userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postBySubredditId);

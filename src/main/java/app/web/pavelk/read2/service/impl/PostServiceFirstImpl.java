@@ -74,7 +74,7 @@ public class PostServiceFirstImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubreddit(Long subredditId, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubReadId(Long subredditId, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         log.debug("getPostsBySubreddit");
         SubRead subRead = subReadRepository.findById(subredditId)

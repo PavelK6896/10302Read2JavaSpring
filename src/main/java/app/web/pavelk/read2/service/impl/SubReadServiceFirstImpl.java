@@ -37,6 +37,7 @@ public class SubReadServiceFirstImpl implements SubReadService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<Page<SubReadDto>> getPageSubRead(Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
         log.debug("getPageSubRead");
         return ResponseEntity.status(HttpStatus.OK).body(subReadRepository.findAll(pageable)
                 .map(subReadMapper::mapSubReadToDto));

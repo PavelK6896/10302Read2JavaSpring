@@ -14,29 +14,29 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/subreddit")
+@RequestMapping("/sub-read")
 public class SubReadController {
 
     private final SubReadService subReadService;
 
-    @PostMapping
-    @Operation(description = "Creat sub.")
-    public ResponseEntity<SubReadDto> createSubRead(@RequestBody SubReadDto subReadDto) {
-        return subReadService.createSubRead(subReadDto);
+    @Operation(description = "Get sub.")
+    @GetMapping("/{id}")
+    public ResponseEntity<SubReadDto> getSubReadById(@PathVariable Long id) {
+        return subReadService.getSubReadById(id);
     }
 
-    @GetMapping
+    @Operation(description = "Get page sub.")
     @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
-    @Operation(description = "Get page sub.")
+    @GetMapping
     public ResponseEntity<Page<SubReadDto>> getPageSubRead(@Parameter(hidden = true) Pageable pageable) {
         return subReadService.getPageSubRead(pageable);
     }
 
-    @GetMapping("/{id}")
-    @Operation(description = "Get sub.")
-    public ResponseEntity<SubReadDto> getSubReadById(@PathVariable Long id) {
-        return subReadService.getSubReadById(id);
+    @Operation(description = "Creat sub.")
+    @PostMapping
+    public ResponseEntity<SubReadDto> createSubRead(@RequestBody SubReadDto subReadDto) {
+        return subReadService.createSubRead(subReadDto);
     }
 
 }

@@ -88,7 +88,7 @@ public class PostServiceMapImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubreddit(Long subredditId, Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubReadId(Long subredditId, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         Page<Post> posts = postRepository.findAllBySubredditEntityGraphAll(subredditId, pageable);
         PageImpl<PostResponseDto> postResponseDto = mapPostPage(posts);

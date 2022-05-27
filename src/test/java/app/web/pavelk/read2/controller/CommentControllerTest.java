@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("dev")
 @SpringBootTest(classes = Read2.class)
 @AutoConfigureMockMvc(addFilters = false)
-class CommentsControllerTest {
+class CommentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

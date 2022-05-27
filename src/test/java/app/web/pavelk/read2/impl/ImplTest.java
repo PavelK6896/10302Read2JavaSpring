@@ -103,9 +103,9 @@ class ImplTest {
     void getPostsBySubreddit() throws Exception {
         PageRequest of = PageRequest.of(0, 10, Sort.unsorted());
 
-        ResponseEntity<Page<PostResponseDto>> response1 = postServiceFirst.getPagePostsBySubreddit(1L, of);
-        ResponseEntity<Page<PostResponseDto>> response2 = postServiceMap.getPagePostsBySubreddit(1L, of);
-        ResponseEntity<Page<PostResponseDto>> response3 = postServiceQuery.getPagePostsBySubreddit(1L, of);
+        ResponseEntity<Page<PostResponseDto>> response1 = postServiceFirst.getPagePostsBySubReadId(1L, of);
+        ResponseEntity<Page<PostResponseDto>> response2 = postServiceMap.getPagePostsBySubReadId(1L, of);
+        ResponseEntity<Page<PostResponseDto>> response3 = postServiceQuery.getPagePostsBySubReadId(1L, of);
         String impl1 = objectMapper.writeValueAsString(response1);
         String impl2 = objectMapper.writeValueAsString(response2);
         String impl3 = objectMapper.writeValueAsString(response3);
