@@ -3,6 +3,7 @@ package app.web.pavelk.read2.service;
 import app.web.pavelk.read2.exceptions.InvalidTokenException;
 import app.web.pavelk.read2.repository.RefreshTokenRepository;
 import app.web.pavelk.read2.schema.RefreshToken;
+import app.web.pavelk.read2.service.impl.RefreshTokenServiceFirstImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,7 +26,7 @@ class RefreshTokenServiceTest {
             .id(1L)
             .createdDate(Instant.now())
             .build();
-    RefreshTokenService refreshTokenService = new RefreshTokenService(refreshTokenRepository);
+    RefreshTokenService refreshTokenService = new RefreshTokenServiceFirstImpl(refreshTokenRepository);
 
     @Test
     void rtSave() {

@@ -45,7 +45,7 @@ public class CommentServiceFirstImpl implements CommentService {
         log.debug("createComment");
         Post post = postRepository.findById(commentsDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("No post " + commentsDto.getPostId().toString()));
-        User currentUser = authService.getCurrentUser();
+        User currentUser = authService.getCurrentUserDB();
         commentRepository.save(commentMapper.map(commentsDto, post, currentUser));
 
         String stringMessageMail = "%s posted a comment on your post. %s/view-post/%s "

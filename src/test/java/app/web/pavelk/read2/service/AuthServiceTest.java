@@ -6,6 +6,9 @@ import app.web.pavelk.read2.repository.UserRepository;
 import app.web.pavelk.read2.repository.VerificationTokenRepository;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.security.JwtProvider;
+import app.web.pavelk.read2.service.impl.AuthServiceFirstImpl;
+import app.web.pavelk.read2.service.impl.MailServiceFirstImpl;
+import app.web.pavelk.read2.service.impl.RefreshTokenServiceFirstImpl;
 import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,14 +27,14 @@ class AuthServiceTest {
     PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     UserRepository userRepository = Mockito.mock(UserRepository.class);
     VerificationTokenRepository verificationTokenRepository = Mockito.mock(VerificationTokenRepository.class);
-    MailService mailService = Mockito.mock(MailService.class);
+    MailServiceFirstImpl mailService = Mockito.mock(MailServiceFirstImpl.class);
     JwtProvider jwtProvider = Mockito.mock(JwtProvider.class);
-    RefreshTokenService refreshTokenService = Mockito.mock(RefreshTokenService.class);
+    RefreshTokenServiceFirstImpl refreshTokenService = Mockito.mock(RefreshTokenServiceFirstImpl.class);
     UserDetailsServiceImpl userDetailsService = Mockito.mock(UserDetailsServiceImpl.class);
 
     @Test
     void userIsEnabledTrue() {
-        AuthService authService = new AuthService(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService);
+        AuthService authService = new AuthServiceFirstImpl(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService);
         User userReturn = User.builder()
                 .password("passwordReturn")
                 .enabled(true)
@@ -50,7 +53,7 @@ class AuthServiceTest {
 
     @Test
     void userIsEnabledFalse() {
-        AuthService authService = new AuthService(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService);
+        AuthService authService = new AuthServiceFirstImpl(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService);
         User userReturn = User.builder()
                 .password("passwordReturn")
                 .enabled(false)

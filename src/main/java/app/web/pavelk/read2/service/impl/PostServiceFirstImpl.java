@@ -48,7 +48,7 @@ public class PostServiceFirstImpl implements PostService {
                 .postName(postRequestDto.getPostName())
                 .description(postRequestDto.getDescription())
                 .createdDate(LocalDateTime.now())
-                .user(authService.getCurrentUser())
+                .user(authService.getCurrentUserDB())
                 .subRead(subRead)
                 .build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -96,7 +96,7 @@ public class PostServiceFirstImpl implements PostService {
 
     private String getVote(Post post) {
         if (authService.isLoggedIn()) {
-            return voteRepository.getTypeByUser(post, authService.getCurrentUser())
+            return voteRepository.getTypeByUser(post, authService.getCurrentUserDB())
                     .map(VoteType::toString).orElse(null);
         }
         return null;

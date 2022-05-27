@@ -36,7 +36,7 @@ public class VoteServiceFirstImpl implements VoteService {
     public ResponseEntity<Integer> vote(VoteDto voteDto) {
         log.debug("vote");
         if (authService.isLoggedIn()) {
-            User currentUser = authService.getCurrentUser();
+            User currentUser = authService.getCurrentUserDB();
             Post post = postRepository.findById(voteDto.getPostId())
                     .orElseThrow(() -> new PostNotFoundException("Post Not Found with ID - " + voteDto.getPostId()));
             Optional<Vote> optionalVote = voteRepository.getTypeByUserPostId(voteDto.getPostId(), currentUser);
