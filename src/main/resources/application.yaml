@@ -50,5 +50,6 @@ jwt:
   expiration: 1500
 
 qualifier:
+  allPostfix: Query
   post: PostServiceQueryImpl
   comment: CommentServiceQueryImpl

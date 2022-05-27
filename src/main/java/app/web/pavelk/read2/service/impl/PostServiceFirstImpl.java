@@ -79,7 +79,7 @@ public class PostServiceFirstImpl implements PostService {
         log.debug("getPostsBySubreddit");
         SubRead subRead = subReadRepository.findById(subredditId)
                 .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(subredditId)));
-        Page<PostResponseDto> page = postRepository.findPageBySubreddit(subRead, pageable).map(this::getPostDto);
+        Page<PostResponseDto> page = postRepository.findPageBySubRead(subRead, pageable).map(this::getPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 

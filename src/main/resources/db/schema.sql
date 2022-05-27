@@ -64,7 +64,7 @@ create table if not exists post.vote
     user_id   int8,
     primary key (vote_id)
 );
-create table if not exists subreddit_posts
+create table if not exists sub_read_posts
 (
     sub_read_id   int8 not null,
     posts_post_id int8 not null
@@ -136,27 +136,27 @@ alter table if exists post.vote
             references client.users;
 
 
-alter table if exists subreddit_posts
+alter table if exists sub_read_posts
     drop constraint if exists UK_ih17w4fa2em7w3u1tt8gqv2wh;
 
-alter table if exists subreddit_posts
+alter table if exists sub_read_posts
     add constraint UK_ih17w4fa2em7w3u1tt8gqv2wh unique (posts_post_id);
 
 
-alter table subreddit_posts
+alter table sub_read_posts
     drop constraint if exists FKl27wc8sin3rt45ayge7fanx10;
 
 
-alter table if exists subreddit_posts
+alter table if exists sub_read_posts
     add constraint FKl27wc8sin3rt45ayge7fanx10
         foreign key (posts_post_id)
             references post.post;
 
-alter table subreddit_posts
+alter table sub_read_posts
     drop constraint if exists FK1plpyiqs72shw84g90q0fes5r;
 
 
-alter table subreddit_posts
+alter table sub_read_posts
     add constraint FK1plpyiqs72shw84g90q0fes5r
         foreign key (sub_read_id)
             references post.sub_read;

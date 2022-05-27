@@ -2,6 +2,8 @@ package app.web.pavelk.read2.config;
 
 import app.web.pavelk.read2.service.CommentService;
 import app.web.pavelk.read2.service.PostService;
+import app.web.pavelk.read2.service.SubReadService;
+import app.web.pavelk.read2.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -38,19 +40,38 @@ public class MainConfig {
 
     private final ApplicationContext applicationContext;
 
-    @Bean
-    public PostService postService(@Value("${qualifier.post:PostServiceFirstImpl}") String qualifier) {
-        return (PostService) applicationContext.getBean(toLowerFirst(qualifier));
-    }
-
-    @Bean
-    public CommentService commentService(@Value("${qualifier.comment:CommentServiceFirstImpl}") String qualifier) {
-        return (CommentService) applicationContext.getBean(toLowerFirst(qualifier));
-    }
+    @Value("${qualifier.allPostfix:First}")
+    String allPostfix;
 
     private String toLowerFirst(String qualifier) {
         return qualifier.substring(0, 1).toLowerCase() + qualifier.substring(1);
     }
 
+    private String checkQualifierEmpty(Class<?> classType, String qualifier) {
+        if (qualifier.isEmpty()) {
+            qualifier = classType.getName().replace(classType.getPackageName() + ".", "") + allPostfix + "Impl";
+        }
+        return qualifier;
+    }
+
+    @Bean
+    public PostService postService(@Value("${qualifier.post:}") String qualifier) {
+        return (PostService) applicationContext.getBean(toLowerFirst(checkQualifierEmpty(PostService.class, qualifier)));
+    }
+
+    @Bean
+    public CommentService commentService(@Value("${qualifier.comment:}") String qualifier) {
+        return (CommentService) applicationContext.getBean(toLowerFirst(checkQualifierEmpty(CommentService.class, qualifier)));
+    }
+
+    @Bean
+    public SubReadService subReadService(@Value("${qualifier.sub:}") String qualifier) {
+        return (SubReadService) applicationContext.getBean(toLowerFirst(checkQualifierEmpty(SubReadService.class, qualifier)));
+    }
+
+    @Bean
+    public VoteService voteService(@Value("${qualifier.vote:}") String qualifier) {
+        return (VoteService) applicationContext.getBean(toLowerFirst(checkQualifierEmpty(VoteService.class, qualifier)));
+    }
 
 }

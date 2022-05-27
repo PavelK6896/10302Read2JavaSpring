@@ -39,7 +39,7 @@ public class Post {
     private User user;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "sub_read")
+    @JoinColumn(name = "sub_read_id")
     @ToString.Exclude
     private SubRead subRead;
 

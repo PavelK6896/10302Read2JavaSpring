@@ -15,13 +15,13 @@ public interface SubReadRepository extends JpaRepository<SubRead, Long> {
 
     Optional<SubRead> findByName(String subredditName);
 
-    @Query("select new app.web.pavelk.read2.dto.SubReadDto(s.id, s.name, s.description, s.posts.size) " +
+    @Query("select new app.web.pavelk.read2.dto.SubReadDto(s.id, s.name, s.description, size(s.posts)) " +
             "from SubRead s  " +
             "group by s.id, s.name, s.description " +
             "order by s.createdDate desc ")
     Page<SubReadDto> findPageSubReadDto(Pageable pageable);
 
-    @Query("select new app.web.pavelk.read2.dto.SubReadDto(s.id, s.name, s.description, s.posts.size) " +
+    @Query("select new app.web.pavelk.read2.dto.SubReadDto(s.id, s.name, s.description, size(s.posts)) " +
             "from SubRead s where s.id = :id " +
             "group by s.id, s.name, s.description ")
     Optional<SubReadDto> findSubReadDto(Long id);
