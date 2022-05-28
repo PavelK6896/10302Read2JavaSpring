@@ -13,10 +13,10 @@ import app.web.pavelk.read2.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -48,13 +48,15 @@ public class CommentServiceQueryImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<List<CommentsDto>> getAllCommentsForPost(Long postId) {
-        return ResponseEntity.status(OK).body(commentRepository.findCommentsDtoByPostId(postId));
+    public ResponseEntity<Slice<CommentsDto>> getSliceCommentsForPost(Long postId, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        return ResponseEntity.status(OK).body(commentRepository.findCommentsDtoByPostId(postId, pageable));
     }
 
     @Override
-    public ResponseEntity<List<CommentsDto>> getAllCommentsForUser(String username) {
-        return ResponseEntity.status(OK).body(commentRepository.findCommentsDtoByUserName(username));
+    public ResponseEntity<Slice<CommentsDto>> getSliceCommentsForUser(String username, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
+        return ResponseEntity.status(OK).body(commentRepository.findCommentsDtoByUserName(username, pageable));
     }
 
 }

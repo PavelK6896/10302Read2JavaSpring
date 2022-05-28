@@ -1,14 +1,14 @@
 package app.web.pavelk.read2.service;
 
 import app.web.pavelk.read2.dto.CommentsDto;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
-public interface CommentService {
+public interface CommentService extends CommonService {
     ResponseEntity<Void> createComment(CommentsDto commentsDto);
 
-    ResponseEntity<List<CommentsDto>> getAllCommentsForPost(Long postId);
+    ResponseEntity<Slice<CommentsDto>> getSliceCommentsForPost(Long postId, Pageable pageable);
 
-    ResponseEntity<List<CommentsDto>> getAllCommentsForUser(String userName);
+    ResponseEntity<Slice<CommentsDto>> getSliceCommentsForUser(String userName, Pageable pageable);
 }

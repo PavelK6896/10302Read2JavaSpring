@@ -15,12 +15,13 @@ import app.web.pavelk.read2.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -55,27 +56,22 @@ public class CommentServiceFirstImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<List<CommentsDto>> getAllCommentsForPost(Long postId) {
+    public ResponseEntity<Slice<CommentsDto>> getSliceCommentsForPost(Long postId, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
         log.debug("getAllCommentsForPost");
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new PostNotFoundException("Not found post " + postId));
         return ResponseEntity.status(OK).body(
-                commentRepository.findByPost(post)
-                        .stream()
-                        .map(commentMapper::mapToDto)
-                        .toList()
-        );
+                commentRepository.findByPost(post, pageable).map(commentMapper::mapToDto));
     }
 
     @Override
-    public ResponseEntity<List<CommentsDto>> getAllCommentsForUser(String userName) {
+    public ResponseEntity<Slice<CommentsDto>> getSliceCommentsForUser(String userName, Pageable pageable) {
+        pageable = getDefaultPageable(pageable);
         log.debug("getAllCommentsForUser");
         User user = userRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found " + userName));
         return ResponseEntity.status(OK)
-                .body(commentRepository.findAllByUser(user)
-                        .stream()
-                        .map(commentMapper::mapToDto)
-                        .toList());
+                .body(commentRepository.findAllByUser(user, pageable).map(commentMapper::mapToDto));
     }
 }
