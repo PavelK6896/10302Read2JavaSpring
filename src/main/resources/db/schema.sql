@@ -24,6 +24,7 @@ create table if not exists client.users
     enabled  boolean,
     password varchar(255),
     username varchar(255) unique not null,
+    roles    text[],
     primary key (id)
 );
 

@@ -1,19 +1,21 @@
-insert into client.users (created, email, enabled, password, username)
+insert into client.users (created, email, enabled, password, username, roles)
 select '2021-01-30 10:25:57.953057',
-       '@yandex.ru',
+       'q@yandex.ru',
        true,
        '{bcrypt}$2a$12$TaNWYCIOp60ypRbDgOpWTOmYgdK9c/zy3l8Bzk3yX1N0YOv6oYGMG',
-       'Pavel'
+       'Pavel',
+       '{USER,ADMIN}'
 WHERE NOT EXISTS(
         SELECT id FROM client.users WHERE id = 1
     );
 
-insert into client.users (created, email, enabled, password, username)
+insert into client.users (created, email, enabled, password, username, roles)
 select '2021-01-30 10:25:57.953057',
-       '@yandex.ru2',
+       'q@yandex.ru2',
        true,
        '{bcrypt}$2a$12$TaNWYCIOp60ypRbDgOpWTOmYgdK9c/zy3l8Bzk3yX1N0YOv6oYGMG',
-       'admin'
+       'admin',
+       ARRAY ['USER','ADMIN']
 WHERE NOT EXISTS(
         SELECT id FROM client.users WHERE id = 2
     );

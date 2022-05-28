@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -78,6 +79,7 @@ public class AuthServiceFirstImpl implements AuthService {
         setUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         setUser.setCreated(Instant.now());
         setUser.setEnabled(false);
+        setUser.setRoles(List.of(User.Role.USER));
 
         userRepository.save(setUser);
         String token = generateVerificationToken(setUser);
