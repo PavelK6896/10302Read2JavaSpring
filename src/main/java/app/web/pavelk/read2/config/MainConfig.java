@@ -6,10 +6,12 @@ import app.web.pavelk.read2.service.SubReadService;
 import app.web.pavelk.read2.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,6 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+@EnableAsync
+@ConfigurationPropertiesScan
 @Configuration
 @RequiredArgsConstructor
 public class MainConfig {

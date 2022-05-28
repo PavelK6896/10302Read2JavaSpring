@@ -1,5 +1,6 @@
 package app.web.pavelk.read2.service.impl;
 
+import app.web.pavelk.read2.config.properties.AppProperties;
 import app.web.pavelk.read2.dto.AuthenticationResponse;
 import app.web.pavelk.read2.dto.LoginRequest;
 import app.web.pavelk.read2.dto.RefreshTokenRequest;
@@ -18,7 +19,6 @@ import app.web.pavelk.read2.service.MailService;
 import app.web.pavelk.read2.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -55,8 +55,7 @@ public class AuthServiceFirstImpl implements AuthService {
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
     private final UserDetailsService userDetailsServiceImpl;
-    @Value("${host:}")
-    private String host;
+    private final AppProperties appProperties;
 
     @Override
     @Transactional
@@ -92,7 +91,7 @@ public class AuthServiceFirstImpl implements AuthService {
         log.debug("verifyAccount");
         fetchUserAndEnable(verificationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Invalid verification Token")));
-        return ResponseEntity.status(FOUND).header("Location", host + "/read2").build();
+        return ResponseEntity.status(FOUND).header("Location", appProperties.getHost() + "/read2").build();
     }
 
     private void fetchUserAndEnable(VerificationToken verificationToken) {

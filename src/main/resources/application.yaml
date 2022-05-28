@@ -45,6 +45,7 @@ spring:
 
 app:
   notification: false
+  host: http
 
 jwt:
   expiration: 1500

@@ -1,13 +1,14 @@
 package app.web.pavelk.read2.security;
 
 
+import app.web.pavelk.read2.config.properties.JwtProperties;
 import app.web.pavelk.read2.dto.AuthenticationResponse;
 import app.web.pavelk.read2.exceptions.ExceptionMessage;
 import app.web.pavelk.read2.exceptions.SubReadException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +20,11 @@ import java.security.cert.CertificateException;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class JwtProvider {
 
     private KeyStore keyStore;
-
-    @Value("${jwt.expiration:150}")
-    private Long expiration;
+    private final JwtProperties jwtProperties;
 
     @PostConstruct
     public void init() {
@@ -43,7 +43,7 @@ public class JwtProvider {
         claims.put("role", userDetails.getAuthorities().toString());
 
         LocalDateTime localDateTimeNow = LocalDateTime.now();
-        LocalDateTime localDateTimeNowPlus = localDateTimeNow.plusMinutes(expiration);
+        LocalDateTime localDateTimeNowPlus = localDateTimeNow.plusMinutes(jwtProperties.getExpiration());
 
         return AuthenticationResponse.builder()
                 .authenticationToken(

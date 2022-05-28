@@ -1,15 +1,18 @@
-package app.web.pavelk.read2.security;
+package app.web.pavelk.read2.config.properties;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @ConfigurationProperties(prefix = "jwt")
+@Getter
+@Setter(AccessLevel.PACKAGE)
 public class JwtProperties {
 
     /**
      * Time duration token.
      */
-    private String expiration = "150";
+    private Integer expiration = 150;
 
 }

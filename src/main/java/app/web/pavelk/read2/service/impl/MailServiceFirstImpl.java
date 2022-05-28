@@ -1,5 +1,6 @@
 package app.web.pavelk.read2.service.impl;
 
+import app.web.pavelk.read2.config.properties.AppProperties;
 import app.web.pavelk.read2.dto.NotificationEmail;
 import app.web.pavelk.read2.exceptions.ExceptionMessage;
 import app.web.pavelk.read2.exceptions.SubReadException;
@@ -21,12 +22,9 @@ import org.springframework.stereotype.Service;
 public class MailServiceFirstImpl implements MailService {
 
     private final JavaMailSender javaMailSender;
+    private final AppProperties appProperties;
     @Value("${spring.mail.username:}")
     public String email;
-    @Value("${app.notification:false}")
-    public boolean appNotification;
-    @Value("${host:}")
-    private String host;
 
     @Override
     @Async
@@ -57,7 +55,7 @@ public class MailServiceFirstImpl implements MailService {
 
     @Override
     public void sendCommentNotification(String message, User user) {
-        if (appNotification) {
+        if (appProperties.isNotification()) {
             sendMail(new NotificationEmail(user.getUsername() + " Commented on your post", user.getEmail(), message));
         }
     }
@@ -69,7 +67,7 @@ public class MailServiceFirstImpl implements MailService {
                 .recipient(email)
                 .body("Thank you for signing up to Spring Reddit, " +
                         "please click on the below url to activate your account: " +
-                        host + "/api/read2/api/auth/accountVerification/" + token
+                        appProperties.getHost() + "/api/read2/api/auth/accountVerification/" + token
                 ).build());
     }
 }
