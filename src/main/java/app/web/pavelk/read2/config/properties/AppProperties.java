@@ -10,7 +10,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter(AccessLevel.PACKAGE)
 public class AppProperties {
 
-    private boolean notification;
+    private boolean notificationComment;
+
+    private boolean notificationSingUp;
 
     private String host;
 

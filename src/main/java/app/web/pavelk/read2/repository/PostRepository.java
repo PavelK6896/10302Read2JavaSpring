@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findPageBySubRead(SubRead subRead, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"user", "subreddit"})
+    @EntityGraph(attributePaths = {"user", "subRead"})
     @Query("select p from Post p where p.subRead.id = :subReadId ")
     Page<Post> findAllBySubredditEntityGraphAll(Long subReadId, Pageable pageable);
 
@@ -30,14 +30,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findPageByUser(User user, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"user", "subreddit"})
+    @EntityGraph(attributePaths = {"user", "subRead"})
     @Query("select p from Post p where p.user.username = :username ")
     Page<Post> findByUserEntityGraphAll(String username, Pageable pageable);
 
     @Query("select p from Post p ")
     Page<Post> findPage(Pageable pageable);
 
-    @EntityGraph(attributePaths = {"user", "subreddit"})
+    @EntityGraph(attributePaths = {"user", "subRead"})
     @Query("select p from Post p ")
     Page<Post> findPageEntityGraphAll(Pageable pageable);
 

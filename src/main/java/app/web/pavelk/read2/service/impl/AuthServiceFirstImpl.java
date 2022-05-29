@@ -78,12 +78,14 @@ public class AuthServiceFirstImpl implements AuthService {
         setUser.setEmail(registerRequest.getEmail());
         setUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         setUser.setCreated(Instant.now());
-        setUser.setEnabled(false);
+        setUser.setEnabled(!appProperties.isNotificationSingUp());
         setUser.setRoles(List.of(User.Role.USER));
 
         userRepository.save(setUser);
         String token = generateVerificationToken(setUser);
-        mailService.sendAuthNotification(setUser.getEmail(), token);
+        if (appProperties.isNotificationSingUp()) {
+            mailService.sendAuthNotification(setUser.getEmail(), token);
+        }
         return ResponseEntity.status(OK).body(USER_REGISTRATION_SUCCESSFUL);
     }
 

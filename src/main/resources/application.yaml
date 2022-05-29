@@ -44,7 +44,8 @@ spring:
 
 
 app:
-  notification: false
+  notificationComment: false
+  notificationSingUp: false
   host: http
 
 jwt:

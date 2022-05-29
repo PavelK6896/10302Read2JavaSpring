@@ -1,5 +1,6 @@
 package app.web.pavelk.read2.service;
 
+import app.web.pavelk.read2.config.properties.AppProperties;
 import app.web.pavelk.read2.dto.RegisterRequest;
 import app.web.pavelk.read2.exceptions.UserAlreadyExists;
 import app.web.pavelk.read2.repository.UserRepository;
@@ -31,10 +32,11 @@ class AuthServiceTest {
     JwtProvider jwtProvider = Mockito.mock(JwtProvider.class);
     RefreshTokenServiceFirstImpl refreshTokenService = Mockito.mock(RefreshTokenServiceFirstImpl.class);
     UserDetailsServiceImpl userDetailsService = Mockito.mock(UserDetailsServiceImpl.class);
+    AppProperties appProperties = Mockito.mock(AppProperties.class);
 
     @Test
     void userIsEnabledTrue() {
-        AuthService authService = new AuthServiceFirstImpl(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService);
+        AuthService authService = new AuthServiceFirstImpl(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService, appProperties);
         User userReturn = User.builder()
                 .password("passwordReturn")
                 .enabled(true)
@@ -53,7 +55,7 @@ class AuthServiceTest {
 
     @Test
     void userIsEnabledFalse() {
-        AuthService authService = new AuthServiceFirstImpl(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService);
+        AuthService authService = new AuthServiceFirstImpl(passwordEncoder, userRepository, verificationTokenRepository, mailService, jwtProvider, refreshTokenService, userDetailsService, appProperties);
         User userReturn = User.builder()
                 .password("passwordReturn")
                 .enabled(false)

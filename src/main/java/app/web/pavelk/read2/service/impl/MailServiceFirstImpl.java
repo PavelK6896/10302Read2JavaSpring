@@ -55,7 +55,7 @@ public class MailServiceFirstImpl implements MailService {
 
     @Override
     public void sendCommentNotification(String message, User user) {
-        if (appProperties.isNotification()) {
+        if (appProperties.isNotificationComment()) {
             sendMail(new NotificationEmail(user.getUsername() + " Commented on your post", user.getEmail(), message));
         }
     }

@@ -92,7 +92,7 @@ class AuthControllerTest {
                 .email(email)
                 .password(password)
                 .username(username).build();
-        mockMvc.perform(post("/api/auth/signUp")
+        mockMvc.perform(post("/auth/sign-up")
                         .content(objectMapper.writeValueAsString(registerRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -105,7 +105,7 @@ class AuthControllerTest {
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email(email)
                 .build();
-        mockMvc.perform(post("/api/auth/signUp")
+        mockMvc.perform(post("/auth/sign-up")
                         .content(objectMapper.writeValueAsString(registerRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -127,7 +127,7 @@ class AuthControllerTest {
                 .token("4412ced7-1faf-49b4-a05a-d1cee3c526af")
                 .user(user)
                 .build());
-        mockMvc.perform(get("/api/auth/accountVerification/4412ced7-1faf-49b4-a05a-d1cee3c526af"))
+        mockMvc.perform(get("/auth/account-verification/4412ced7-1faf-49b4-a05a-d1cee3c526af"))
                 .andDo(print())
                 .andExpect(status().is(302))
                 .andExpect(header().exists("Location"));
@@ -135,7 +135,7 @@ class AuthControllerTest {
 
     @Test
     void accountVerification2Wrong() throws Exception {
-        mockMvc.perform(get("/api/auth/accountVerification/ljljljljlkjlk"))
+        mockMvc.perform(get("/auth/account-verification/ljljljljlkjlk"))
                 .andDo(print())
                 .andExpect(status().is(403))
                 .andExpect(content().string("Invalid verification Token"));
@@ -154,7 +154,7 @@ class AuthControllerTest {
                 .username(username)
                 .password(password)
                 .build();
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post("/auth/sign-in")
                         .content(objectMapper.writeValueAsString(loginRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -179,7 +179,7 @@ class AuthControllerTest {
                 .username(username)
                 .password(password)
                 .build();
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post("/auth/sign-in")
                         .content(objectMapper.writeValueAsString(loginRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -193,7 +193,7 @@ class AuthControllerTest {
                 .username(username)
                 .password(password)
                 .build();
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post("/auth/sing-in")
                         .content(objectMapper.writeValueAsString(loginRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -219,7 +219,7 @@ class AuthControllerTest {
                 .refreshToken(string)
                 .username(username)
                 .build();
-        mockMvc.perform(post("/api/auth/refresh/token")
+        mockMvc.perform(post("/auth/refresh/token")
                         .content(objectMapper.writeValueAsString(refreshTokenRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -238,7 +238,7 @@ class AuthControllerTest {
                 .refreshToken(string)
                 .username(username)
                 .build();
-        mockMvc.perform(post("/api/auth/refresh/token")
+        mockMvc.perform(post("/auth/refresh/token")
                         .content(objectMapper.writeValueAsString(refreshTokenRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -258,7 +258,7 @@ class AuthControllerTest {
                 .refreshToken(string)
                 .username(username)
                 .build();
-        mockMvc.perform(post("/api/auth/logout")
+        mockMvc.perform(post("/auth/sign-out")
                         .content(objectMapper.writeValueAsString(refreshTokenRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
