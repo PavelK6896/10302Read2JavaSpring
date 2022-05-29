@@ -39,14 +39,14 @@ create table if not exists post.comment
 );
 create table if not exists post.post
 (
-    post_id      bigserial not null,
+    id           bigserial not null,
     created_date timestamp,
     description  text,
     post_name    varchar(255),
     vote_count   int4,
     sub_read_id  int8,
     user_id      int8,
-    primary key (post_id)
+    primary key (id)
 );
 create table if not exists post.sub_read
 (
@@ -59,16 +59,16 @@ create table if not exists post.sub_read
 );
 create table if not exists post.vote
 (
-    vote_id   bigserial not null,
+    id        bigserial not null,
     vote_type int4,
     post_id   int8,
     user_id   int8,
-    primary key (vote_id)
+    primary key (id)
 );
 create table if not exists sub_read_posts
 (
-    sub_read_id   int8 not null,
-    posts_post_id int8 not null
+    sub_read_id int8 not null,
+    posts_id    int8 not null
 );
 
 alter table client.token
@@ -141,7 +141,7 @@ alter table if exists sub_read_posts
     drop constraint if exists UK_ih17w4fa2em7w3u1tt8gqv2wh;
 
 alter table if exists sub_read_posts
-    add constraint UK_ih17w4fa2em7w3u1tt8gqv2wh unique (posts_post_id);
+    add constraint UK_ih17w4fa2em7w3u1tt8gqv2wh unique (posts_id);
 
 
 alter table sub_read_posts
@@ -150,7 +150,7 @@ alter table sub_read_posts
 
 alter table if exists sub_read_posts
     add constraint FKl27wc8sin3rt45ayge7fanx10
-        foreign key (posts_post_id)
+        foreign key (posts_id)
             references post.post;
 
 alter table sub_read_posts

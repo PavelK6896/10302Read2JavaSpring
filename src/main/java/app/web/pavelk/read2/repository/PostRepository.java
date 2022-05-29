@@ -50,51 +50,51 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "from User u where u.id = :userId ")
     void insertPost(PostRequestDto postRequestDto, Long userId, LocalDateTime createdDate);
 
-    @Query("select p.postId as id, p.postName as postName, p.description as description, p.user.username as userName, " +
+    @Query("select p.id as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subRead.name as subReadName, p.subRead.id as subReadId, " +
             "(sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)) as voteCount, " +
             "count(distinct c) as commentCount, p.createdDate as duration, v2.voteType as vote " +
             "from Post p " +
-            "left join Vote v on v.post.postId = p.postId " +
-            "left join Vote v2 on v2.post.postId = p.postId and v2.user.id = :userId " +
-            "left join Comment c on c.post.postId = p.postId " +
-            "where p.postId = :postId " +
-            "group by p.postId, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
+            "left join Vote v on v.post.id = p.id " +
+            "left join Vote v2 on v2.post.id = p.id and v2.user.id = :userId " +
+            "left join Comment c on c.post.id = p.id " +
+            "where p.id = :postId " +
+            "group by p.id, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
     PostResponseProjection findPostResponseProjectionById(Long postId, Long userId);
 
-    @Query("select p.postId as id, p.postName as postName, p.description as description, p.user.username as userName, " +
+    @Query("select p.id as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subRead.name as subReadName, p.subRead.id as subReadId, " +
             "(sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)) as voteCount, " +
             "count(distinct c) as commentCount, p.createdDate as duration, v2.voteType as vote " +
             "from Post p " +
-            "left join Vote v on v.post.postId = p.postId " +
-            "left join Vote v2 on v2.post.postId = p.postId and v2.user.id = :userId " +
-            "left join Comment c on c.post.postId = p.postId " +
-            "group by p.postId, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
+            "left join Vote v on v.post.id = p.id " +
+            "left join Vote v2 on v2.post.id = p.id and v2.user.id = :userId " +
+            "left join Comment c on c.post.id = p.id " +
+            "group by p.id, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
     Page<PostResponseProjection> findPagePost(Long userId, Pageable pageable);
 
-    @Query("select p.postId as id, p.postName as postName, p.description as description, p.user.username as userName, " +
+    @Query("select p.id as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subRead.name as subReadName, p.subRead.id as subReadId, " +
             "(sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)) as voteCount, " +
             "count(distinct c) as commentCount, p.createdDate as duration, v2.voteType as vote " +
             "from Post p " +
-            "left join Vote v on v.post.postId = p.postId " +
-            "left join Vote v2 on v2.post.postId = p.postId and v2.user.id = :userId " +
-            "left join Comment c on c.post.postId = p.postId " +
+            "left join Vote v on v.post.id = p.id " +
+            "left join Vote v2 on v2.post.id = p.id and v2.user.id = :userId " +
+            "left join Comment c on c.post.id = p.id " +
             "where p.subRead.id = :subredditId " +
-            "group by p.postId, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
+            "group by p.id, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
     Page<PostResponseProjection> findPostBySubredditId(Long subredditId, Long userId, Pageable pageable);
 
-    @Query("select p.postId as id, p.postName as postName, p.description as description, p.user.username as userName, " +
+    @Query("select p.id as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subRead.name as subReadName, p.subRead.id as subReadId, " +
             "(sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)) as voteCount, " +
             "count(distinct c) as commentCount, p.createdDate as duration, v2.voteType as vote " +
             "from Post p " +
-            "left join Vote v on v.post.postId = p.postId " +
-            "left join Vote v2 on v2.post.postId = p.postId and v2.user.id = :userId " +
-            "left join Comment c on c.post.postId = p.postId " +
+            "left join Vote v on v.post.id = p.id " +
+            "left join Vote v2 on v2.post.id = p.id and v2.user.id = :userId " +
+            "left join Comment c on c.post.id = p.id " +
             "where p.user.username = :username " +
-            "group by p.postId, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
+            "group by p.id, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
     Page<PostResponseProjection> findPostByUsername(String username, Long userId, Pageable pageable);
 
 }

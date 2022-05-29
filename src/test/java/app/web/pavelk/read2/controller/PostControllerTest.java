@@ -167,7 +167,7 @@ class PostControllerTest {
                 .build());
         Post post1 = postRepository.save(Post.builder()
                 .createdDate(LocalDateTime.now())
-                .postId(postId1)
+                .id(postId1)
                 .postName("post1")
                 .user(user)
                 .description("d1")
@@ -176,7 +176,7 @@ class PostControllerTest {
                 .build());
         Post post2 = postRepository.save(Post.builder()
                 .createdDate(LocalDateTime.now())
-                .postId(postId2)
+                .id(postId2)
                 .postName("post2")
                 .user(user)
                 .description("d2")
@@ -192,15 +192,15 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.content[1].postName", is("post2")))
                 .andExpect(jsonPath("$.content[0].subReadName", is("name1")))
                 .andExpect(jsonPath("$.content[1].subReadName", is("name1")))
-                .andExpect(jsonPath("$.content[0].id", is(post1.getPostId().intValue())))
-                .andExpect(jsonPath("$.content[1].id", is(post2.getPostId().intValue())));
+                .andExpect(jsonPath("$.content[0].id", is(post1.getId().intValue())))
+                .andExpect(jsonPath("$.content[1].id", is(post2.getId().intValue())));
     }
 
     @Test
     void getAllPosts2Wrong() throws Exception {
         postRepository.save(Post.builder()
                 .createdDate(LocalDateTime.now())
-                .postId(1L)
+                .id(1L)
                 .postName("post2")
                 .user(null)
                 .description("d2")
@@ -232,18 +232,18 @@ class PostControllerTest {
         Post post = postRepository.save(Post
                 .builder()
                 .createdDate(LocalDateTime.now())
-                .postId(postId)
+                .id(postId)
                 .postName("post")
                 .user(user)
                 .description("description1")
                 .voteCount(20)
                 .subRead(subRead)
                 .build());
-        mockMvc.perform(get("/api/posts/" + post.getPostId().intValue()))
+        mockMvc.perform(get("/api/posts/" + post.getId().intValue()))
                 .andDo(print())
                 .andExpect(jsonPath("$.postName", is("post")))
                 .andExpect(jsonPath("$.description", is("description1")))
-                .andExpect(jsonPath("$.id", is(post.getPostId().intValue())))
+                .andExpect(jsonPath("$.id", is(post.getId().intValue())))
                 .andExpect(jsonPath("$.userName", is(username3)))
                 .andExpect(jsonPath("$.subReadName", is("subReadName1")));
 
@@ -281,7 +281,7 @@ class PostControllerTest {
                 .build());
         postRepository.save(Post.builder()
                 .createdDate(LocalDateTime.now())
-                .postId(postId)
+                .id(postId)
                 .postName("post")
                 .user(user)
                 .description("description1")
@@ -326,7 +326,7 @@ class PostControllerTest {
                 .build());
         postRepository.save(Post.builder()
                 .createdDate(LocalDateTime.now())
-                .postId(postId)
+                .id(postId)
                 .postName("getPostsByUsername1RightP")
                 .user(user)
                 .description("getPostsByUsername1RightD")

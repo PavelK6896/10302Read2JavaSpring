@@ -103,7 +103,7 @@ class VoteControllerTest {
                 .build());
         VoteDto voteDto = VoteDto.builder()
                 .voteType(VoteType.UP_VOTE)
-                .postId(post1.getPostId())
+                .postId(post1.getId())
                 .build();
         mockMvc.perform(post("/api/votes")
                         .content(objectMapper.writeValueAsString(voteDto))

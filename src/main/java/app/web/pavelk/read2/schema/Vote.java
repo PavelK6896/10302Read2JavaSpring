@@ -21,7 +21,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Vote {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long voteId;
+    private Long id;
 
     private VoteType voteType;
 
@@ -41,7 +41,7 @@ public class Vote {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Vote vote = (Vote) o;
-        return voteId != null && Objects.equals(voteId, vote.voteId);
+        return id != null && Objects.equals(id, vote.id);
     }
 
     @Override

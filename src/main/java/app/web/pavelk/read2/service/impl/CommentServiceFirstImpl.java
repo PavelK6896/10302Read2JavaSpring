@@ -50,7 +50,7 @@ public class CommentServiceFirstImpl implements CommentService {
         commentRepository.save(commentMapper.map(commentsDto, post, currentUser));
 
         String stringMessageMail = "%s posted a comment on your post. %s/view-post/%s "
-                .formatted(currentUser.getUsername(), hostUrl, post.getPostId());
+                .formatted(currentUser.getUsername(), hostUrl, post.getId());
         mailService.sendCommentNotification(stringMessageMail, post.getUser());
         return ResponseEntity.status(CREATED).build();
     }

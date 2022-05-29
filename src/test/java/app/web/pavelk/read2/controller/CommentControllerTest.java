@@ -95,7 +95,7 @@ class CommentControllerTest {
                 .user(user)
                 .build());
         Post post = postRepository.save(Post.builder()
-                .postId(1L)
+                .id(1L)
                 .postName("sz")
                 .user(user)
                 .description("11")
@@ -104,7 +104,7 @@ class CommentControllerTest {
                 .build());
         CommentsDto commentsDto = CommentsDto.builder()
                 .createdDate(Instant.now())
-                .postId(post.getPostId())
+                .postId(post.getId())
                 .text("comment1")
                 .userName(username1)
                 .build();
@@ -143,7 +143,7 @@ class CommentControllerTest {
                 .user(null)
                 .build());
         Post post = postRepository.save(Post.builder()
-                .postId(1L)
+                .id(1L)
                 .postName("sz")
                 .user(null)
                 .description("11")
@@ -152,7 +152,7 @@ class CommentControllerTest {
                 .build());
         CommentsDto comment1 = CommentsDto.builder()
                 .createdDate(Instant.now())
-                .postId(post.getPostId())
+                .postId(post.getId())
                 .text("comment1")
                 .userName(username2)
                 .build();
@@ -175,7 +175,7 @@ class CommentControllerTest {
                 .enabled(true)
                 .build());
         Post post = postRepository.save(Post.builder()
-                .postId(12L)
+                .id(12L)
                 .postName("s")
                 .user(user)
                 .description("11")
@@ -193,7 +193,7 @@ class CommentControllerTest {
                 .user(user)
                 .text("comment2")
                 .build());
-        mockMvc.perform(get("/api/comments/by-post/" + post.getPostId()))
+        mockMvc.perform(get("/api/comments/by-post/" + post.getId()))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$", hasSize(2)));
@@ -219,7 +219,7 @@ class CommentControllerTest {
                 .enabled(true)
                 .build());
         Post post = postRepository.save(Post.builder()
-                .postId(postId)
+                .id(postId)
                 .postName("s")
                 .user(user)
                 .description("11")

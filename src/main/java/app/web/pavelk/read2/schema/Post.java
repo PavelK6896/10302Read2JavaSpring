@@ -22,7 +22,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Post {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long postId;
+    private Long id;
 
     @NotBlank(message = "Post Name cannot be empty or Null")
     private String postName;
@@ -31,6 +31,7 @@ public class Post {
 
     private LocalDateTime createdDate;
 
+    @Builder.Default
     private Integer voteCount = 0;
 
     @ManyToOne(fetch = LAZY)
@@ -48,7 +49,7 @@ public class Post {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Post post = (Post) o;
-        return postId != null && Objects.equals(postId, post.postId);
+        return id != null && Objects.equals(id, post.id);
     }
 
     @Override

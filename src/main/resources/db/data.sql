@@ -48,7 +48,7 @@ select '2021-01-30 11:02:42.572943',
        1,
        1
 WHERE NOT EXISTS(
-        SELECT post_id FROM post.post WHERE post_id = 1
+        SELECT id FROM post.post WHERE id = 1
     );
 
 insert into post.post (created_date, description, post_name, vote_count, sub_read_id, user_id)
@@ -59,7 +59,7 @@ select '2021-01-30 11:03:32.656813',
        1,
        1
 WHERE NOT EXISTS(
-        SELECT post_id FROM post.post WHERE post_id = 2
+        SELECT id FROM post.post WHERE id = 2
     );
 
 insert into post.post (created_date, description, post_name, vote_count, sub_read_id, user_id)
@@ -70,7 +70,7 @@ select '2021-01-30 11:06:47.074138',
        2,
        1
 WHERE NOT EXISTS(
-        SELECT post_id FROM post.post WHERE post_id = 3
+        SELECT id FROM post.post WHERE id = 3
     );
 
 insert into post.comment (created_date, text, post_id, user_id)
@@ -88,12 +88,12 @@ WHERE NOT EXISTS(
 insert into post.vote (vote_type, post_id, user_id)
 select 0, 1, 1
 WHERE NOT EXISTS(
-        SELECT vote_id FROM post.vote WHERE vote_id = 1
+        SELECT id FROM post.vote WHERE id = 1
     );
 
 insert into post.vote (vote_type, post_id, user_id)
 select 0, 2, 1
 WHERE NOT EXISTS(
-        SELECT vote_id FROM post.vote WHERE vote_id = 2
+        SELECT id FROM post.vote WHERE id = 2
     );
 

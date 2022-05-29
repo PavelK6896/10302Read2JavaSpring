@@ -65,7 +65,7 @@ public class PostServiceMapImpl implements PostService {
                 .orElseThrow(() -> new PostNotFoundException("Post not found id " + postId));
         Integer count = voteRepository.getCount(post);
         return ResponseEntity.status(HttpStatus.OK).body(PostResponseDto.builder()
-                .id(post.getPostId())
+                .id(post.getId())
                 .postName(post.getPostName())
                 .description(post.getDescription())
                 .userName(post.getUser().getUsername())
@@ -105,7 +105,7 @@ public class PostServiceMapImpl implements PostService {
     }
 
     private PageImpl<PostResponseDto> mapPostPage(Page<Post> posts) {
-        List<Long> postIds = posts.getContent().stream().map(Post::getPostId).toList();
+        List<Long> postIds = posts.getContent().stream().map(Post::getId).toList();
         Map<Long, Integer> postIdVoteCountMap = voteRepository.findListPostIdVoteCount(postIds).stream()
                 .collect(Collectors.toMap(f -> (Long) f.get(0), f -> ((Long) f.get(1)).intValue()));
         Map<Long, Integer> postIdCommentCountMap = commentRepository.findListTuplePostIdCommentCount(postIds).stream()

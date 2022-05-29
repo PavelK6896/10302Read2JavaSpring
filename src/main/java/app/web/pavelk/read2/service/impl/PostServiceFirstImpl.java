@@ -105,7 +105,7 @@ public class PostServiceFirstImpl implements PostService {
     private PostResponseDto getPostDto(Post post) {
         Integer count = voteRepository.getCount(post);
         return PostResponseDto.builder()
-                .id(post.getPostId())
+                .id(post.getId())
                 .postName(post.getPostName())
                 .description(post.getDescription())
                 .userName(post.getUser().getUsername())

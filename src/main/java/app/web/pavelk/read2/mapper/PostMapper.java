@@ -17,26 +17,26 @@ import java.util.Map;
 public interface PostMapper {
 
     @Named("posts")
-    @Mapping(target = "id", source = "post.postId")
+    @Mapping(target = "id", source = "post.id")
     @Mapping(target = "duration", source = "post.createdDate")
     @Mapping(target = "userName", source = "post.user.username")
     @Mapping(target = "subReadName", source = "post.subRead.name")
     @Mapping(target = "subReadId", source = "post.subRead.id")
     @Mapping(target = "voteCount", expression = "java(getVoteCount(post, mapContextPosts))")
     @Mapping(target = "commentCount", expression = "java(getCommentCount(post, mapContextPosts))")
-    @Mapping(target = "vote", expression = "java(mapContextPosts.getPostIdVoteTypeMap().get(post.getPostId()))")
+    @Mapping(target = "vote", expression = "java(mapContextPosts.getPostIdVoteTypeMap().get(post.getId()))")
     PostResponseDto toDto(Post post, @Context MapContextPosts mapContextPosts);
 
     @IterableMapping(qualifiedByName = "posts")
     List<PostResponseDto> toDtoList(List<Post> source, @Context MapContextPosts mapContextPosts);
 
     default Integer getVoteCount(Post post, MapContextPosts mapContextPosts) {
-        Integer voteCount = mapContextPosts.getPostIdVoteCountMap().get(post.getPostId());
+        Integer voteCount = mapContextPosts.getPostIdVoteCountMap().get(post.getId());
         return voteCount == null ? 0 : voteCount;
     }
 
     default Integer getCommentCount(Post post, MapContextPosts mapContextPosts) {
-        Integer commentCount = mapContextPosts.getPostIdCommentCountMap().get(post.getPostId());
+        Integer commentCount = mapContextPosts.getPostIdCommentCountMap().get(post.getId());
         return commentCount == null ? 0 : commentCount;
     }
 

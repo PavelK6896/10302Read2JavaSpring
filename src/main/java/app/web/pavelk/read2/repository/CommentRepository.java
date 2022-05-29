@@ -14,6 +14,7 @@ import java.util.List;
 
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+
     List<Comment> findByPost(Post post);
 
     Slice<Comment> findByPost(Post post, Pageable pageable);
@@ -22,19 +23,19 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Slice<Comment> findAllByUser(User user, Pageable pageable);
 
-    @Query("select c.post.postId, count(c) " +
-            "from Comment c where c.post.postId in (:postIds) group by c.post.postId ")
+    @Query("select c.post.id, count(c) " +
+            "from Comment c where c.post.id in (:postIds) group by c.post.id ")
     List<Tuple> findListTuplePostIdCommentCount(List<Long> postIds);
 
-    @Query("select new app.web.pavelk.read2.dto.CommentsDto(c.id, c.post.postId, c.createdDate, c.text, c.user.username ) " +
-            "from Comment c where c.post.postId = :postId " +
-            "group by c.id, c.post.postId, c.createdDate, c.text, c.user.username " +
+    @Query("select new app.web.pavelk.read2.dto.CommentsDto(c.id, c.post.id, c.createdDate, c.text, c.user.username ) " +
+            "from Comment c where c.post.id = :postId " +
+            "group by c.id, c.post.id, c.createdDate, c.text, c.user.username " +
             "order by c.createdDate desc ")
     Slice<app.web.pavelk.read2.dto.CommentsDto> findCommentsDtoByPostId(Long postId, Pageable pageable);
 
-    @Query("select new app.web.pavelk.read2.dto.CommentsDto(c.id, c.post.postId, c.createdDate, c.text, c.user.username ) " +
+    @Query("select new app.web.pavelk.read2.dto.CommentsDto(c.id, c.post.id, c.createdDate, c.text, c.user.username ) " +
             "from Comment c where c.user.username = :username " +
-            "group by c.id, c.post.postId, c.createdDate, c.text, c.user.username " +
+            "group by c.id, c.post.id, c.createdDate, c.text, c.user.username " +
             "order by c.createdDate desc ")
     Slice<app.web.pavelk.read2.dto.CommentsDto> findCommentsDtoByUserName(String username, Pageable pageable);
 
