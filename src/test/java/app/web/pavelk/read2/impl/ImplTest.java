@@ -1,11 +1,10 @@
 package app.web.pavelk.read2.impl;
 
+import app.web.pavelk.read2.dto.CommentsDto;
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
-import app.web.pavelk.read2.repository.SubReadRepository;
-import app.web.pavelk.read2.service.impl.PostServiceFirstImpl;
-import app.web.pavelk.read2.service.impl.PostServiceMapImpl;
-import app.web.pavelk.read2.service.impl.PostServiceQueryImpl;
+import app.web.pavelk.read2.dto.SubReadDto;
+import app.web.pavelk.read2.service.impl.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -18,6 +17,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -45,8 +45,6 @@ class ImplTest {
     private PostServiceMapImpl postServiceMapImpl;
     @Autowired
     private PostServiceQueryImpl postServiceQueryImpl;
-    @Autowired
-    private SubReadRepository subReadRepository;
 
     @Container
     public static GenericContainer<?> postgres = new GenericContainer<>(DockerImageName.parse("postgres:14")).withExposedPorts(5432).withEnv("POSTGRES_USER", "postgres").withEnv("POSTGRES_PASSWORD", "postgres").withEnv("POSTGRES_DB", "read2");
@@ -125,6 +123,57 @@ class ImplTest {
         String impl3 = objectMapper.writeValueAsString(response3);
         JSONAssert.assertEquals(impl1, impl2, JSONCompareMode.STRICT);
         JSONAssert.assertEquals(impl2, impl3, JSONCompareMode.STRICT);
+    }
+
+    @Autowired
+    private SubReadServiceFirstImpl subReadServiceFirstImpl;
+
+    @Autowired
+    private SubReadServiceQueryImpl subReadServiceQueryImpl;
+
+    @Test
+    void getPageSubRead() throws Exception {
+        PageRequest of = PageRequest.of(0, 10, Sort.unsorted());
+        ResponseEntity<Page<SubReadDto>> response1 = subReadServiceFirstImpl.getPageSubRead(of);
+        ResponseEntity<Page<SubReadDto>> response2 = subReadServiceQueryImpl.getPageSubRead(of);
+        String impl1 = objectMapper.writeValueAsString(response1);
+        String impl2 = objectMapper.writeValueAsString(response2);
+        JSONAssert.assertEquals(impl1, impl2, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    void getSubReadById() throws Exception {
+        ResponseEntity<SubReadDto> response1 = subReadServiceFirstImpl.getSubReadById(1L);
+        ResponseEntity<SubReadDto> response2 = subReadServiceQueryImpl.getSubReadById(1L);
+        String impl1 = objectMapper.writeValueAsString(response1);
+        String impl2 = objectMapper.writeValueAsString(response2);
+        JSONAssert.assertEquals(impl1, impl2, JSONCompareMode.STRICT);
+    }
+
+    @Autowired
+    private CommentServiceFirstImpl commentServiceFirstImpl;
+
+    @Autowired
+    private CommentServiceQueryImpl commentServiceQueryImpl;
+
+    @Test
+    void getSliceCommentsForPost() throws Exception {
+        PageRequest of = PageRequest.of(0, 10, Sort.unsorted());
+        ResponseEntity<Slice<CommentsDto>> response1 = commentServiceFirstImpl.getSliceCommentsForPost(1L, of);
+        ResponseEntity<Slice<CommentsDto>> response2 = commentServiceQueryImpl.getSliceCommentsForPost(1L, of);
+        String impl1 = objectMapper.writeValueAsString(response1);
+        String impl2 = objectMapper.writeValueAsString(response2);
+        JSONAssert.assertEquals(impl1, impl2, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    void getSliceCommentsForUser() throws Exception {
+        PageRequest of = PageRequest.of(0, 10, Sort.unsorted());
+        ResponseEntity<Slice<CommentsDto>> response1 = commentServiceFirstImpl.getSliceCommentsForUser("admin", of);
+        ResponseEntity<Slice<CommentsDto>> response2 = commentServiceQueryImpl.getSliceCommentsForUser("admin", of);
+        String impl1 = objectMapper.writeValueAsString(response1);
+        String impl2 = objectMapper.writeValueAsString(response2);
+        JSONAssert.assertEquals(impl1, impl2, JSONCompareMode.STRICT);
     }
 
 }

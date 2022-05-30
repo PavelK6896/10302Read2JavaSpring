@@ -6,6 +6,7 @@ import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,10 +18,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findByPost(Post post);
 
+    @EntityGraph(attributePaths = {"user", "post"})
     Slice<Comment> findByPost(Post post, Pageable pageable);
 
     List<Comment> findAllByUser(User user);
 
+    @EntityGraph(attributePaths = {"user", "post"})
     Slice<Comment> findAllByUser(User user, Pageable pageable);
 
     @Query("select c.post.id, count(c) " +

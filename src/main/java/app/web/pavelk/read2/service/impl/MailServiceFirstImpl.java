@@ -67,7 +67,7 @@ public class MailServiceFirstImpl implements MailService {
                 .recipient(email)
                 .body("Thank you for signing up to Spring Reddit, " +
                         "please click on the below url to activate your account: " +
-                        appProperties.getHost() + "/api/read2/api/auth/accountVerification/" + token
+                        appProperties.getHost() + "/api/read2/auth/account-verification/" + token
                 ).build());
     }
 }

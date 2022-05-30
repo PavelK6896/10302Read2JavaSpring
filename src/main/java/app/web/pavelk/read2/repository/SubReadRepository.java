@@ -5,6 +5,7 @@ import app.web.pavelk.read2.dto.SubReadDto;
 import app.web.pavelk.read2.schema.SubRead;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,6 +15,14 @@ import java.util.Optional;
 public interface SubReadRepository extends JpaRepository<SubRead, Long> {
 
     Optional<SubRead> findByName(String subredditName);
+
+    @EntityGraph(attributePaths = {"posts"})
+    @Query("select s from SubRead s ")
+    Page<SubRead> findPageEntityGraph(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"posts"})
+    @Query("select s from SubRead s where s.id = :id ")
+    Optional<SubRead> findByIdEntityGraph(Long id);
 
     @Query("select new app.web.pavelk.read2.dto.SubReadDto(s.id, s.name, s.description, size(s.posts)) " +
             "from SubRead s  " +

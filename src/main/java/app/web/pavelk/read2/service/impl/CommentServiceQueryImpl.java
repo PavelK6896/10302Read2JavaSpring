@@ -18,6 +18,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -35,6 +37,7 @@ public class CommentServiceQueryImpl implements CommentService {
     private String hostUrl;
 
     @Override
+    @Transactional
     public ResponseEntity<Void> createComment(CommentsDto commentsDto) {
         Post post = postRepository.findById(commentsDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("No post " + commentsDto.getPostId().toString()));

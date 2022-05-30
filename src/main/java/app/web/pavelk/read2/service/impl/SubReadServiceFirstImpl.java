@@ -35,18 +35,17 @@ public class SubReadServiceFirstImpl implements SubReadService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public ResponseEntity<Page<SubReadDto>> getPageSubRead(Pageable pageable) {
         pageable = getDefaultPageable(pageable);
         log.debug("getPageSubRead");
-        return ResponseEntity.status(HttpStatus.OK).body(subReadRepository.findAll(pageable)
+        return ResponseEntity.status(HttpStatus.OK).body(subReadRepository.findPageEntityGraph(pageable)
                 .map(subReadMapper::mapSubReadToDto));
     }
 
     @Override
     public ResponseEntity<SubReadDto> getSubReadById(Long id) {
         log.debug("getSubReadById");
-        SubRead subRead = subReadRepository.findById(id)
+        SubRead subRead = subReadRepository.findByIdEntityGraph(id)
                 .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(id)));
         return ResponseEntity.status(HttpStatus.OK).body(subReadMapper.mapSubReadToDto(subRead));
     }
