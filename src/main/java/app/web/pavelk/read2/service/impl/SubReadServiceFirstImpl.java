@@ -8,6 +8,7 @@ import app.web.pavelk.read2.mapper.SubReadMapper;
 import app.web.pavelk.read2.repository.SubReadRepository;
 import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.service.SubReadService;
+import app.web.pavelk.read2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,12 +27,19 @@ public class SubReadServiceFirstImpl implements SubReadService {
 
     private final SubReadRepository subReadRepository;
     private final SubReadMapper subReadMapper;
+    private final UserService userService;
 
     @Override
     @Transactional
     public ResponseEntity<SubReadDto> createSubRead(SubReadDto subReadDto) {
         log.debug("createSubRead");
-        SubRead subRead = subReadRepository.save(subReadMapper.mapDtoToSubRead(subReadDto));
+        subReadRepository.findByName(subReadDto.getName()).ifPresent(subRead -> {
+            throw new SubReadException("Sub read name %s exist.".formatted(subRead.getName()));
+        });
+        SubRead subReadNew = subReadMapper.mapDtoToSubRead(subReadDto);
+        subReadNew.setCreatedDate(Instant.now());
+        subReadNew.setUser(userService.getUser());
+        SubRead subRead = subReadRepository.save(subReadNew);
         subReadDto.setId(subRead.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(subReadDto);
     }
