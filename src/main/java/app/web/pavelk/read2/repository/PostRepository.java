@@ -53,21 +53,22 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p.id as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subRead.name as subReadName, p.subRead.id as subReadId, " +
             "(sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)) as voteCount, " +
-            "count(distinct c) as commentCount, p.createdDate as duration, v2.voteType as vote " +
+            "(select count(distinct c) from Comment c where c.post.id = p.id) as commentCount, " +
+            "p.createdDate as duration, v2.voteType as vote " +
             "from Post p " +
             "left join Vote v on v.post.id = p.id " +
             "left join Vote v2 on v2.post.id = p.id and v2.user.id = :userId " +
-            "left join Comment c on c.post.id = p.id " +
             "where p.id = :postId " +
             "group by p.id, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
     PostResponseProjection findPostResponseProjectionById(Long postId, Long userId);
 
     @Query("select p.id as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subRead.name as subReadName, p.subRead.id as subReadId, " +
-            "(sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)) as voteCount, " +
+            "(count(distinct v0) - count(distinct v1)) as voteCount, " +
             "count(distinct c) as commentCount, p.createdDate as duration, v2.voteType as vote " +
             "from Post p " +
-            "left join Vote v on v.post.id = p.id " +
+            "left join Vote v0 on v0.post.id = p.id and v0.voteType = 0 " +
+            "left join Vote v1 on v1.post.id = p.id and v1.voteType = 1 " +
             "left join Vote v2 on v2.post.id = p.id and v2.user.id = :userId " +
             "left join Comment c on c.post.id = p.id " +
             "group by p.id, p.postName, p.description, p.user.username, p.subRead.name, p.subRead.id,  p.createdDate, v2.voteType")
@@ -75,10 +76,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p.id as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subRead.name as subReadName, p.subRead.id as subReadId, " +
-            "(sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)) as voteCount, " +
+            "(count(distinct v0) - count(distinct v1)) as voteCount, " +
             "count(distinct c) as commentCount, p.createdDate as duration, v2.voteType as vote " +
             "from Post p " +
-            "left join Vote v on v.post.id = p.id " +
+            "left join Vote v0 on v0.post.id = p.id and v0.voteType = 0 " +
+            "left join Vote v1 on v1.post.id = p.id and v1.voteType = 1 " +
             "left join Vote v2 on v2.post.id = p.id and v2.user.id = :userId " +
             "left join Comment c on c.post.id = p.id " +
             "where p.subRead.id = :subredditId " +
@@ -87,10 +89,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p.id as id, p.postName as postName, p.description as description, p.user.username as userName, " +
             "p.subRead.name as subReadName, p.subRead.id as subReadId, " +
-            "(sum(case when v.voteType = 0 then 1 else 0 end) - sum(case when v.voteType = 1 then 1 else 0 end)) as voteCount, " +
+            "(count(distinct v0) - count(distinct v1)) as voteCount, " +
             "count(distinct c) as commentCount, p.createdDate as duration, v2.voteType as vote " +
             "from Post p " +
-            "left join Vote v on v.post.id = p.id " +
+            "left join Vote v0 on v0.post.id = p.id and v0.voteType = 0 " +
+            "left join Vote v1 on v1.post.id = p.id and v1.voteType = 1 " +
             "left join Vote v2 on v2.post.id = p.id and v2.user.id = :userId " +
             "left join Comment c on c.post.id = p.id " +
             "where p.user.username = :username " +

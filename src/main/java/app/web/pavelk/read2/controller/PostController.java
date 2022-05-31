@@ -26,7 +26,7 @@ public class PostController {
     @Operation(description = "Get post by id.")
     @Parameter(in = ParameterIn.PATH, name = "id", schema = @Schema(defaultValue = "1"))
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long id) {
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long id) {
         return postService.getPost(id);
     }
 
@@ -34,7 +34,7 @@ public class PostController {
     @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
     @GetMapping
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(@Parameter(hidden = true) Pageable pageable) {
+    public ResponseEntity<Page<PostResponseDto>> getPagePosts(@Parameter(hidden = true) Pageable pageable) {
         return postService.getPagePosts(pageable);
     }
 

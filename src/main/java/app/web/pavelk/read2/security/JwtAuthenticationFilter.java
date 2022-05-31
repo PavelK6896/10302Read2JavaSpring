@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         String bearerToken = getJwtFromRequest(request);
 
-        if (StringUtils.hasText(bearerToken) && !all) {
+        if (StringUtils.hasText(bearerToken)) {
             try {
                 String username = jwtProvider.getUsernameAndValidateJwt(bearerToken);
                 if (username != null) {
@@ -56,7 +56,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             } catch (Exception e) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bad credentials");
+                if (!all)
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bad credentials");
             }
         }
 
