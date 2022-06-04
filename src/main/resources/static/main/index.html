@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en" color-mode="dark"><head>
+    <meta charset="utf-8">
+    <title>10317Read2TSAngular</title>
+    <base href="/api/read2/main/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+<style>@charset "UTF-8";:root{--bs-blue:#0d6efd;--bs-indigo:#6610f2;--bs-purple:#6f42c1;--bs-pink:#d63384;--bs-red:#dc3545;--bs-orange:#fd7e14;--bs-yellow:#ffc107;--bs-green:#198754;--bs-teal:#20c997;--bs-cyan:#0dcaf0;--bs-white:#fff;--bs-gray:#6c757d;--bs-gray-dark:#343a40;--bs-gray-100:#f8f9fa;--bs-gray-200:#e9ecef;--bs-gray-300:#dee2e6;--bs-gray-400:#ced4da;--bs-gray-500:#adb5bd;--bs-gray-600:#6c757d;--bs-gray-700:#495057;--bs-gray-800:#343a40;--bs-gray-900:#212529;--bs-primary:#0d6efd;--bs-secondary:#6c757d;--bs-success:#198754;--bs-info:#0dcaf0;--bs-warning:#ffc107;--bs-danger:#dc3545;--bs-light:#f8f9fa;--bs-dark:#212529;--bs-primary-rgb:13, 110, 253;--bs-secondary-rgb:108, 117, 125;--bs-success-rgb:25, 135, 84;--bs-info-rgb:13, 202, 240;--bs-warning-rgb:255, 193, 7;--bs-danger-rgb:220, 53, 69;--bs-light-rgb:248, 249, 250;--bs-dark-rgb:33, 37, 41;--bs-white-rgb:255, 255, 255;--bs-black-rgb:0, 0, 0;--bs-body-color-rgb:33, 37, 41;--bs-body-bg-rgb:255, 255, 255;--bs-font-sans-serif:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";--bs-font-monospace:SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;--bs-gradient:linear-gradient(180deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, 0));--bs-body-font-family:var(--bs-font-sans-serif);--bs-body-font-size:1rem;--bs-body-font-weight:400;--bs-body-line-height:1.5;--bs-body-color:#212529;--bs-body-bg:#fff}*,*:before,*:after{box-sizing:border-box}@media (prefers-reduced-motion: no-preference){:root{scroll-behavior:smooth}}body{margin:0;font-family:var(--bs-body-font-family);font-size:var(--bs-body-font-size);font-weight:var(--bs-body-font-weight);line-height:var(--bs-body-line-height);color:var(--bs-body-color);text-align:var(--bs-body-text-align);background-color:var(--bs-body-bg);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0)}svg{vertical-align:middle}button{border-radius:0}button:focus:not(:focus-visible){outline:0}button{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}button{text-transform:none}button{-webkit-appearance:button}button:not(:disabled){cursor:pointer}.btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;-webkit-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}@media (prefers-reduced-motion: reduce){.btn{transition:none}}.btn:hover{color:#212529}.btn:focus{outline:0;box-shadow:0 0 0 .25rem #0d6efd40}.btn:disabled{pointer-events:none;opacity:.65}.btn-outline-secondary{color:#6c757d;border-color:#6c757d}.btn-outline-secondary:hover{color:#fff;background-color:#6c757d;border-color:#6c757d}.btn-outline-secondary:focus{box-shadow:0 0 0 .25rem #6c757d80}.btn-outline-secondary:active{color:#fff;background-color:#6c757d;border-color:#6c757d}.btn-outline-secondary:active:focus{box-shadow:0 0 0 .25rem #6c757d80}.btn-outline-secondary:disabled{color:#6c757d;background-color:transparent}.btn-outline-dark{color:#212529;border-color:#212529}.btn-outline-dark:hover{color:#fff;background-color:#212529;border-color:#212529}.btn-outline-dark:focus{box-shadow:0 0 0 .25rem #21252980}.btn-outline-dark:active{color:#fff;background-color:#212529;border-color:#212529}.btn-outline-dark:active:focus{box-shadow:0 0 0 .25rem #21252980}.btn-outline-dark:disabled{color:#212529;background-color:transparent}.position-fixed{position:fixed!important}.top-0{top:0!important}.end-0{right:0!important}.mt-2{margin-top:.5rem!important}.me-2{margin-right:.5rem!important}[color-mode=dark]:root{--bs-blue:#375a7f;--bs-indigo:#673ab7;--bs-purple:#654ea3;--bs-pink:#e83e8c;--bs-red:#e74c3c;--bs-orange:#fd7e14;--bs-yellow:#f39c12;--bs-green:#00bc8c;--bs-teal:#45b5aa;--bs-cyan:#17a2b8;--bs-white:#fafafa;--bs-black:#111;--bs-gray:#7e7e7e;--bs-gray-dark:#121212;--bs-gray-100:#e1e1e1;--bs-gray-200:#cfcfcf;--bs-gray-300:#b1b1b1;--bs-gray-400:#9e9e9e;--bs-gray-500:#7e7e7e;--bs-gray-600:#626262;--bs-gray-700:#515151;--bs-gray-800:#3b3b3b;--bs-gray-900:#222;--bs-primary:#375a7f;--bs-secondary:#626262;--bs-success:#00bc8c;--bs-info:#17a2b8;--bs-warning:#f39c12;--bs-danger:#e74c3c;--bs-light:#9e9e9e;--bs-dark:#3b3b3b;--bs-primary-rgb:55, 90, 127;--bs-secondary-rgb:98, 98, 98;--bs-success-rgb:0, 188, 140;--bs-info-rgb:23, 162, 184;--bs-warning-rgb:243, 156, 18;--bs-danger-rgb:231, 76, 60;--bs-light-rgb:158, 158, 158;--bs-dark-rgb:59, 59, 59;--bs-white-rgb:250, 250, 250;--bs-black-rgb:17, 17, 17;--bs-body-color-rgb:225, 225, 225;--bs-body-bg-rgb:34, 34, 34;--bs-body-color:#e1e1e1;--bs-body-bg:#222;--bs-gradient:linear-gradient(180deg, rgba(17, 17, 17, .15), rgba(17, 17, 17, 0))}[color-mode=dark] .btn{color:#e1e1e1;background-color:transparent;border:1px solid transparent}[color-mode=dark] .btn:hover{color:#e1e1e1}[color-mode=dark] .btn:focus{box-shadow:0 0 0 .25rem #375a7f40}[color-mode=dark] .btn:disabled{opacity:.65}[color-mode=dark] .btn-outline-secondary{color:#626262;border-color:#626262}[color-mode=dark] .btn-outline-secondary:hover{color:#fff;background-color:#626262;border-color:#626262}[color-mode=dark] .btn-outline-secondary:focus{box-shadow:0 0 0 .25rem #62626280}[color-mode=dark] .btn-outline-secondary:active{color:#fff;background-color:#626262;border-color:#626262}[color-mode=dark] .btn-outline-secondary:active:focus{box-shadow:0 0 0 .25rem #62626280}[color-mode=dark] .btn-outline-secondary:disabled{color:#626262;background-color:transparent}[color-mode=dark] .btn-outline-dark{color:#3b3b3b;border-color:#3b3b3b}[color-mode=dark] .btn-outline-dark:hover{color:#fff;background-color:#3b3b3b;border-color:#3b3b3b}[color-mode=dark] .btn-outline-dark:focus{box-shadow:0 0 0 .25rem #3b3b3b80}[color-mode=dark] .btn-outline-dark:active{color:#fff;background-color:#3b3b3b;border-color:#3b3b3b}[color-mode=dark] .btn-outline-dark:active:focus{box-shadow:0 0 0 .25rem #3b3b3b80}[color-mode=dark] .btn-outline-dark:disabled{color:#3b3b3b;background-color:transparent}[color-mode=dark] body::selection{color:#cfcfcf;background:rgba(23,162,184,.5)}.color-mode__btn{z-index:9000}:root{color-scheme:light dark}[color-mode=dark]:root .dark--hidden{display:none}</style><link rel="stylesheet" href="/api/read2/main/styles.707c0b83c6851edd.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/api/read2/main/styles.707c0b83c6851edd.css"></noscript></head>
+<body>
+<script>
+    if (window && document.documentElement) {
+        const e = window.localStorage.getItem("color-mode")
+        if (e) {
+            document.documentElement.setAttribute("color-mode", e);
+        } else {
+            if (window.matchMedia("(prefers-color-scheme: dark)")) {
+                document.documentElement.setAttribute("color-mode", "dark");
+                localStorage.setItem("color-mode", "dark")
+            } else {
+                document.documentElement.setAttribute("color-mode", "light");
+            }
+        }
+    }
+</script>
+<app-root></app-root>
+<button class="color-mode__btn light--hidden btn btn-outline-secondary position-fixed top-0 end-0 mt-2 me-2 ">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+    </svg>
+</button>
+<button class="color-mode__btn dark--hidden btn btn-outline-dark position-fixed top-0 end-0 mt-2 me-2  ">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+    </svg>
+</button>
+<script>
+    const toggleColorMode = e => {
+        if (e.currentTarget.classList.contains("light--hidden")) {
+            document.documentElement.setAttribute("color-mode", "light");
+            localStorage.setItem("color-mode", "light")
+            return;
+        }
+        document.documentElement.setAttribute("color-mode", "dark");
+        localStorage.setItem("color-mode", "dark")
+    }
+
+    const toggleColorButtons = document.querySelectorAll(".color-mode__btn");
+    toggleColorButtons.forEach(btn => {
+        btn.addEventListener("click", toggleColorMode);
+    });
+</script>
+<script src="/api/read2/main/runtime.e047e5fe0b6955da.js" type="module"></script><script src="/api/read2/main/polyfills.cec4a9dde5c17b72.js" type="module"></script><script src="/api/read2/main/main.0fed514f971a540c.js" type="module"></script>
+
+</body></html>
