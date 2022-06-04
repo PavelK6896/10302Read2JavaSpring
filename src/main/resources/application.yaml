@@ -40,7 +40,7 @@ spring:
           use_jdbc_metadata_defaults: false
     hibernate:
       ddl-auto: none
-    open-in-view: true
+    open-in-view: false
 
 
 app:

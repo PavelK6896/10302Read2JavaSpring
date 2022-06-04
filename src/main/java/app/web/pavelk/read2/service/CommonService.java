@@ -7,7 +7,8 @@ import org.springframework.data.domain.Sort;
 public interface CommonService {
     default Pageable getDefaultPageable(Pageable pageable) {
         if (pageable.getSort().isUnsorted()) {
-            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.ASC, "createdDate"));
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdDate")
+                    .and(Sort.by(Sort.Direction.DESC, "id")));
         }
         if (pageable.getPageSize() > 500) {
             pageable = PageRequest.of(pageable.getPageNumber(), 500, pageable.getSort());
