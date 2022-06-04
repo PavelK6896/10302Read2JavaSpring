@@ -4,11 +4,16 @@ RUN microdnf install maven
 RUN mvn -v
 RUN native-image --version
 
-FROM builder AS maven
-COPY --chown=mvn:mvn . /home/app
+FROM builder AS verify
+ADD --chown=mvn:mvn pom.xml /home/app/pom.xml
+WORKDIR /home/app
+RUN mvn verify -P native -D skipTests -D maven.test.skip=true -e --fail-never
+
+FROM verify AS maven
+ADD --chown=mvn:mvn /src /home/app/src
 WORKDIR /home/app
 
-RUN mvn clean package -D skipTests -P native
+RUN mvn clean package -P native -D skipTests -D maven.test.skip=true
 
 FROM oraclelinux:8-slim
 ENV NAME_APP=read2-app
