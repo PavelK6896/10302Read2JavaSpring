@@ -46,7 +46,7 @@ spring:
 app:
   notificationComment: false
   notificationSingUp: false
-  host: http
+  host: ${HOST:http://localhost:8080}
 
 jwt:
   expiration: 1500
