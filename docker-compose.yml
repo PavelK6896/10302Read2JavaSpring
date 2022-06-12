@@ -16,7 +16,7 @@ services:
       - postgres14_read2_data:/var/lib/postgresql/data
 
   read2:
-    image: 'read2-v1'
+    image: 'registry.heroku.com/read2-v1/web'
     container_name: read2
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres14_read2:5432/read2

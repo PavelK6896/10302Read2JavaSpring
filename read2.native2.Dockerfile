@@ -1,4 +1,4 @@
-ARG deployBuild="http://localhost:8080"
+ARG deployBuild="https://read2-v1.herokuapp.com"
 
 FROM ghcr.io/graalvm/native-image:ol8-java17 AS builder
 RUN microdnf install maven
@@ -57,5 +57,14 @@ COPY --from=maven "/home/app/target/$NAME_APP" spring-boot-native
 CMD [ "sh", "-c", "./spring-boot-native " ]
 
 
-# docker build -t read2-v2 -f read2.native2.Dockerfile .
-# docker run --name read2-v2-c1 -p 8080:8080 -d read2-v2
+
+# docker build -t registry.heroku.com/read2-v1/web -f read2.native2.Dockerfile .
+# docker run --name read2-v1-c1 -p 8080:8080 -d registry.heroku.com/read2-v1/web
+
+
+# heroku auth:token
+# docker login --username=_ --password= registry.heroku.com
+# docker push registry.heroku.com/read2-v1/web
+# heroku container:release web --app read2-v1
+# heroku log --app read2-v1
+
