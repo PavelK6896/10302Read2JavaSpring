@@ -20,10 +20,11 @@ spring:
     password:
 
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/read2}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    first:
+      driver-class-name: org.postgresql.Driver
+      url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/read2}
+      username: ${SPRING_DATASOURCE_USERNAME:postgres}
+      password: ${SPRING_DATASOURCE_PASSWORD:postgres}
   sql:
     init:
       mode: always

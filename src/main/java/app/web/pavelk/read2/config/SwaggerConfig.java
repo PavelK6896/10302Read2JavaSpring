@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -18,10 +19,12 @@ public class SwaggerConfig {
 
     public static final String BEARER = "Bearer";
     public static final String READ_2 = "Read 2";
+    @Value("${app.host:}")
+    private String host;
 
     @PostConstruct
     public void pathsLog() {
-        log.info("http://localhost:8080/api/read2/swagger-ui/index.html");
+        log.info("{}/api/read2/swagger-ui/index.html", host);
     }
 
     @Bean
