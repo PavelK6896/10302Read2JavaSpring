@@ -57,8 +57,8 @@ COPY --from=maven "/home/app/target/$NAME_APP" spring-boot-native
 CMD [ "sh", "-c", "./spring-boot-native " ]
 
 
-
-# docker build -t registry.heroku.com/read2-v1/web -f read2.native2.Dockerfile .
+# docker build --build-arg deployBuild="http://localhost:8080" -t registry.heroku.com/read2-v1/web -f read2.native2.Dockerfile .
+# docker build --build-arg deployBuild="https://read2-v1.herokuapp.com" -t registry.heroku.com/read2-v1/web -f read2.native2.Dockerfile .
 # docker run --name read2-v1-c1 -p 8080:8080 -d registry.heroku.com/read2-v1/web
 
 

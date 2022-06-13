@@ -13,8 +13,8 @@
     <groupId>app.web.pavelk.read2</groupId>
     <artifactId>read2-app</artifactId>
     <version>1</version>
-    <name>name</name>
-    <description>d</description>
+    <name>10302Read2JavaSpring</name>
+    <description>Website with messages.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -22,6 +22,7 @@
         <java.version>17</java.version>
         <repackage.classifier/>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+        <org.projectlombok.version>1.18.24</org.projectlombok.version>
         <spring-native.version>0.12.0</spring-native.version>
         <testcontainers.version>1.17.2</testcontainers.version>
     </properties>
@@ -135,7 +136,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.24</version>
+                            <version>${org.projectlombok.version}</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -143,25 +144,6 @@
                             <version>${org.mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                    <classifier>${repackage.classifier}</classifier>
-                    <image>
-                        <builder>paketobuildpacks/builder:tiny</builder>
-                        <env>
-                            <BP_NATIVE_IMAGE>false</BP_NATIVE_IMAGE>
-                        </env>
-                    </image>
                 </configuration>
             </plugin>
             <plugin>
@@ -230,6 +212,26 @@
             </dependencies>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M6</version>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -243,6 +245,18 @@
             </dependencies>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
@@ -350,6 +364,25 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclude>
+                            </excludes>
+                            <classifier>${repackage.classifier}</classifier>
+                            <image>
+                                <builder>paketobuildpacks/builder:tiny</builder>
+                                <env>
+                                    <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                                </env>
+                            </image>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
