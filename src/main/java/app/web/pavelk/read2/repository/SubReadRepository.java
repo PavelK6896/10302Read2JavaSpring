@@ -35,4 +35,11 @@ public interface SubReadRepository extends JpaRepository<SubRead, Long> {
             "group by s.id, s.name, s.description ")
     Optional<SubReadDto> findSubReadDto(Long id);
 
+    @Query("select new app.web.pavelk.read2.dto.SubReadDto(s.id, s.name, s.description, size(s.posts)) " +
+            "from SubRead s  where s.name like :startsWith% " +
+            "group by s.id, s.name, s.description " +
+            "order by s.createdDate desc ")
+    Page<SubReadDto>  findSubReadDtoLikeStartsWith(Pageable pageable, String startsWith);
+
+
 }

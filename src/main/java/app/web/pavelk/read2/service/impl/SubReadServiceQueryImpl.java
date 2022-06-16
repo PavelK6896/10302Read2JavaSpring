@@ -56,4 +56,11 @@ public class SubReadServiceQueryImpl implements SubReadService {
                 .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(id)));
         return ResponseEntity.status(HttpStatus.OK).body(subReadDto);
     }
+
+    @Override
+    public ResponseEntity<Page<SubReadDto>> getPageSubReadLikeStartsWith(Pageable pageable, String startsWith) {
+        pageable = getDefaultPageable(pageable);
+        Page<SubReadDto> subReadDtoLikeStartsWith = subReadRepository.findSubReadDtoLikeStartsWith(pageable, startsWith);
+        return ResponseEntity.status(HttpStatus.OK).body(subReadDtoLikeStartsWith);
+    }
 }

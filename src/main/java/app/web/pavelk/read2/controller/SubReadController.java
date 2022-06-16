@@ -39,4 +39,13 @@ public class SubReadController {
         return subReadService.createSubRead(subReadDto);
     }
 
+    @Operation(description = "Get page sub like starts with.")
+    @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(defaultValue = "0"))
+    @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(defaultValue = "20"))
+    @Parameter(in = ParameterIn.QUERY, name = "startsWith", schema = @Schema(defaultValue = ""))
+    @GetMapping("/starts-with")
+    public ResponseEntity<Page<SubReadDto>> getPageSubReadLikeStartsWith(@RequestParam String startsWith, @Parameter(hidden = true) Pageable pageable) {
+        return subReadService.getPageSubReadLikeStartsWith(pageable, startsWith);
+    }
+
 }

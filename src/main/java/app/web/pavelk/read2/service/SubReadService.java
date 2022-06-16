@@ -12,4 +12,6 @@ public interface SubReadService extends CommonService {
     ResponseEntity<Page<SubReadDto>> getPageSubRead(Pageable pageable);
 
     ResponseEntity<SubReadDto> getSubReadById(Long id);
+
+    ResponseEntity<Page<SubReadDto>> getPageSubReadLikeStartsWith(Pageable pageable, String startsWith);
 }
