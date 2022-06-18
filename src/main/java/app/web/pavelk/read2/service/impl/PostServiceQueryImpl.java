@@ -3,8 +3,11 @@ package app.web.pavelk.read2.service.impl;
 
 import app.web.pavelk.read2.dto.PostRequestDto;
 import app.web.pavelk.read2.dto.PostResponseDto;
+import app.web.pavelk.read2.exceptions.ExceptionMessage;
+import app.web.pavelk.read2.exceptions.SubReadException;
 import app.web.pavelk.read2.mapper.PostMapper;
 import app.web.pavelk.read2.repository.PostRepository;
+import app.web.pavelk.read2.repository.SubReadRepository;
 import app.web.pavelk.read2.schema.projection.PostResponseProjection;
 import app.web.pavelk.read2.service.PostService;
 import app.web.pavelk.read2.service.UserService;
@@ -27,10 +30,14 @@ public class PostServiceQueryImpl implements PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final PostMapper postMapper;
+    private final SubReadRepository subReadRepository;
 
     @Override
     @Transactional
     public ResponseEntity<Void> createPost(PostRequestDto postRequestDto) {
+        if (!subReadRepository.existsSubReadByName(postRequestDto.getSubReadName())) {
+            throw new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(postRequestDto.getSubReadName()));
+        }
         postRepository.insertPost(postRequestDto, userService.getUserId(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
