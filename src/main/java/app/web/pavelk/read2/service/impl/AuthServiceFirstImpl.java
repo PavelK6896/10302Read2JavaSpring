@@ -7,7 +7,7 @@ import app.web.pavelk.read2.dto.RefreshTokenRequest;
 import app.web.pavelk.read2.dto.RegisterRequest;
 import app.web.pavelk.read2.exceptions.ExceptionMessage;
 import app.web.pavelk.read2.exceptions.InvalidTokenException;
-import app.web.pavelk.read2.exceptions.SubReadException;
+import app.web.pavelk.read2.exceptions.Read2Exception;
 import app.web.pavelk.read2.exceptions.UserAlreadyExists;
 import app.web.pavelk.read2.repository.UserRepository;
 import app.web.pavelk.read2.repository.VerificationTokenRepository;
@@ -99,7 +99,7 @@ public class AuthServiceFirstImpl implements AuthService {
     private void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new SubReadException(ExceptionMessage.USER_NOT_FOUND.getBodyEn().formatted(username)));
+                .orElseThrow(() -> new Read2Exception(ExceptionMessage.USER_NOT_FOUND.getBodyEn().formatted(username)));
         user.setEnabled(true);
         userRepository.save(user);
     }

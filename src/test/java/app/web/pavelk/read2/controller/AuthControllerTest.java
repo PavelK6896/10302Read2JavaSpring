@@ -1,29 +1,15 @@
 package app.web.pavelk.read2.controller;
 
-import app.web.pavelk.read2.Read2;
 import app.web.pavelk.read2.dto.LoginRequest;
 import app.web.pavelk.read2.dto.RefreshTokenRequest;
 import app.web.pavelk.read2.dto.RegisterRequest;
-import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.RefreshToken;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.VerificationToken;
-import app.web.pavelk.read2.service.MailService;
-import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.Instant;
@@ -37,55 +23,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Disabled("")
-@ActiveProfiles("dev")
-@SpringBootTest(classes = Read2.class)
-@AutoConfigureMockMvc(addFilters = false)
-class AuthControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private VerificationTokenRepository verificationTokenRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private SubReadRepository subReadRepository;
-    @Autowired
-    private VoteRepository voteRepository;
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-    @MockBean
-    private MailService mailService;
+@DirtiesContext
+class AuthControllerTest extends TestCommonController {
 
-    @BeforeEach
-    @Transactional
-    public void clearBase() {
-
-        voteRepository.deleteAll();
-        commentRepository.deleteAll();
-        postRepository.deleteAll();
-        subReadRepository.deleteAll();
-        verificationTokenRepository.deleteAll();
-        refreshTokenRepository.deleteAll();
-        userRepository.deleteAll();
-        userDetailsService.getUserMap().clear();
-
-    }
-
-    static String username = "usernameTest";
-    static String password = "as!@AS123Test";
-    static String email = "sa837@test.com";
 
     @Test
     void signUp1Right() throws Exception {
@@ -186,20 +127,6 @@ class AuthControllerTest {
                 .andDo(print())
                 .andExpect(status().is(403))
                 .andExpect(result -> assertEquals("Bad credentials", result.getResponse().getErrorMessage()));
-    }
-
-    @Test
-    void login3WrongPassword() throws Exception {
-        LoginRequest loginRequest = LoginRequest.builder()
-                .username(username)
-                .password(password)
-                .build();
-        mockMvc.perform(post("/auth/sing-in")
-                        .content(objectMapper.writeValueAsString(loginRequest))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is(404))
-                .andExpect(content().string("No user Found with username : " + username));
     }
 
     @Test

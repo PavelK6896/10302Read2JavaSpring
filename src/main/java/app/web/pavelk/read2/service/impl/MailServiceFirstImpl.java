@@ -3,7 +3,7 @@ package app.web.pavelk.read2.service.impl;
 import app.web.pavelk.read2.config.properties.AppProperties;
 import app.web.pavelk.read2.dto.NotificationEmail;
 import app.web.pavelk.read2.exceptions.ExceptionMessage;
-import app.web.pavelk.read2.exceptions.SubReadException;
+import app.web.pavelk.read2.exceptions.Read2Exception;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.service.MailService;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ public class MailServiceFirstImpl implements MailService {
             javaMailSender.send(mimeMessagePreparator);
         } catch (MailException e) {
             log.error(ExceptionMessage.MAIL_SENDING.getBodyEn().formatted(notificationEmail.getRecipient()), e);
-            throw new SubReadException(ExceptionMessage.MAIL_SENDING.getBodyEn().formatted(notificationEmail.getRecipient()), e);
+            throw new Read2Exception(ExceptionMessage.MAIL_SENDING.getBodyEn().formatted(notificationEmail.getRecipient()), e);
         }
     }
 

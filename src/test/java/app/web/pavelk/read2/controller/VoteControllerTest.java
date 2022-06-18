@@ -1,27 +1,14 @@
 package app.web.pavelk.read2.controller;
 
-import app.web.pavelk.read2.Read2;
 import app.web.pavelk.read2.dto.VoteDto;
-import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.VoteType;
-import app.web.pavelk.read2.service.MailService;
-import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -30,52 +17,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled("")
-@ActiveProfiles("dev")
-@SpringBootTest(classes = Read2.class)
-@AutoConfigureMockMvc(addFilters = false)
-class VoteControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private VerificationTokenRepository verificationTokenRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private SubReadRepository subReadRepository;
-    @Autowired
-    private VoteRepository voteRepository;
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-    @MockBean
-    private MailService mailService;
-
-    @BeforeEach
-    private void ClearBase() {
-
-        voteRepository.deleteAll();
-        commentRepository.deleteAll();
-        postRepository.deleteAll();
-        subReadRepository.deleteAll();
-        verificationTokenRepository.deleteAll();
-        refreshTokenRepository.deleteAll();
-        userRepository.deleteAll();
-        userDetailsService.getUserMap().clear();
-
-    }
-
-    final String username1 = "voteRight1";
+@DirtiesContext
+class VoteControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username1)
@@ -107,7 +51,7 @@ class VoteControllerTest {
                 .voteType(VoteType.UP_VOTE)
                 .postId(post1.getId())
                 .build();
-        mockMvc.perform(post("/api/votes")
+        mockMvc.perform(post("/vote")
                         .content(objectMapper.writeValueAsString(voteDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -130,7 +74,7 @@ class VoteControllerTest {
                 .voteType(VoteType.DOWN_VOTE)
                 .postId(150L)
                 .build();
-        mockMvc.perform(post("/api/votes")
+        mockMvc.perform(post("/vote")
                         .content(objectMapper.writeValueAsString(voteDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

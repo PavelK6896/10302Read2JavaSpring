@@ -2,7 +2,7 @@ package app.web.pavelk.read2.service.impl;
 
 import app.web.pavelk.read2.dto.SubReadDto;
 import app.web.pavelk.read2.exceptions.ExceptionMessage;
-import app.web.pavelk.read2.exceptions.SubReadException;
+import app.web.pavelk.read2.exceptions.Read2Exception;
 import app.web.pavelk.read2.repository.SubReadRepository;
 import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.service.SubReadService;
@@ -30,7 +30,7 @@ public class SubReadServiceQueryImpl implements SubReadService {
     @Transactional
     public ResponseEntity<SubReadDto> createSubRead(SubReadDto subReadDto) {
         subReadRepository.findByName(subReadDto.getName()).ifPresent(subRead -> {
-            throw new SubReadException("Sub read name %s exist.".formatted(subRead.getName()));
+            throw new Read2Exception("Sub read name %s exist.".formatted(subRead.getName()));
         });
         SubRead subReadNew = SubRead.builder()
                 .name(subReadDto.getName())
@@ -53,7 +53,7 @@ public class SubReadServiceQueryImpl implements SubReadService {
     @Override
     public ResponseEntity<SubReadDto> getSubReadById(Long id) {
         SubReadDto subReadDto = subReadRepository.findSubReadDto(id)
-                .orElseThrow(() -> new SubReadException(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(id)));
+                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(id)));
         return ResponseEntity.status(HttpStatus.OK).body(subReadDto);
     }
 

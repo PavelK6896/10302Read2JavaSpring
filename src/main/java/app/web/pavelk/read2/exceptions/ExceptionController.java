@@ -26,9 +26,9 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
-    @ExceptionHandler(SubReadException.class)
+    @ExceptionHandler(Read2Exception.class)
     public ResponseEntity<String> springRedditException(Exception e) {
-        log.error(e.getMessage() + " Ошибка");
+        log.error(e.getMessage() + " Error");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 

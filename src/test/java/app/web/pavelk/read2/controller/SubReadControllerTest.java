@@ -1,23 +1,16 @@
 package app.web.pavelk.read2.controller;
 
-import app.web.pavelk.read2.Read2;
 import app.web.pavelk.read2.dto.SubReadDto;
-import app.web.pavelk.read2.repository.*;
 import app.web.pavelk.read2.schema.SubRead;
-import app.web.pavelk.read2.service.MailService;
-import app.web.pavelk.read2.service.impl.UserDetailsServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import app.web.pavelk.read2.schema.User;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.Instant;
+
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.SUB_NOT_FOUND;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,61 +18,30 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Disabled("")
-@ActiveProfiles("dev")
-@SpringBootTest(classes = Read2.class)
-@AutoConfigureMockMvc(addFilters = false)
-class SubReadControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private VerificationTokenRepository verificationTokenRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private SubReadRepository subReadRepository;
-    @Autowired
-    private VoteRepository voteRepository;
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-    @MockBean
-    private MailService mailService;
-
-    @BeforeEach
-    private void ClearBase() {
-
-        voteRepository.deleteAll();
-        commentRepository.deleteAll();
-        postRepository.deleteAll();
-        subReadRepository.deleteAll();
-        verificationTokenRepository.deleteAll();
-        refreshTokenRepository.deleteAll();
-        userRepository.deleteAll();
-        userDetailsService.getUserMap().clear();
-
-    }
+@DirtiesContext
+class SubReadControllerTest extends TestCommonController {
 
     @Test
-    void createSubreddit1Right() throws Exception {
+    @WithMockUser(username = username1)
+    void createSub1Right() throws Exception {
+        String password1 = "dsd$%#@sdfs";
+        User user = userRepository.save(User.builder()
+                .created(Instant.now())
+                .email("a@pvhfha.ru")
+                .username(username1)
+                .password(passwordEncoder.encode(password1))
+                .enabled(true)
+                .build());
         Long id = 1L;
-        String name = "createSubreddit1RightN";
-        String description = "createSubreddit1RightD";
+        String name = "create sub-read";
+        String description = "create sub-read";
         SubReadDto subReadDto = SubReadDto.builder()
                 .id(id)
                 .name(name)
                 .description(description)
                 .numberOfPosts(1)
                 .build();
-        mockMvc.perform(post("/api/subreddit")
+        mockMvc.perform(post("/sub-read")
                         .content(objectMapper.writeValueAsString(subReadDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -87,16 +49,16 @@ class SubReadControllerTest {
     }
 
     @Test
-    void createSubreddit2Wrong() throws Exception {
+    void createSub2Wrong() throws Exception {
         Long id = 1L;
-        String description = "createSubreddit2WrongD";
+        String description = "create sub-read";
         SubReadDto subReadDto = SubReadDto.builder()
                 .id(id)
                 .name(null)
                 .description(description)
                 .numberOfPosts(1)
                 .build();
-        mockMvc.perform(post("/api/subreddit")
+        mockMvc.perform(post("/sub-read")
                         .content(objectMapper.writeValueAsString(subReadDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -106,49 +68,51 @@ class SubReadControllerTest {
 
 
     @Test
-    void getAllSubreddits1Right() throws Exception {
-        String name1 = "getAllSubreddits1Right1";
-        String name2 = "getAllSubreddits1Right2";
-        String description = "getAllSubreddits1RightD";
+    void getAllSub1Right() throws Exception {
+        String name1 = "get sub-read";
+        String name2 = "get sub-read 2";
+        String description = "get sub-read";
         SubRead subRead1 = subReadRepository.save(SubRead.builder()
                 .name(name1)
+                .createdDate(Instant.now())
                 .description(description)
                 .build());
         SubRead subRead2 = subReadRepository.save(SubRead.builder()
                 .name(name2)
+                .createdDate(Instant.now().minusSeconds(10))
                 .description(description)
                 .build());
-        mockMvc.perform(get("/api/subreddit"))
+        mockMvc.perform(get("/sub-read"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is(name1)))
-                .andExpect(jsonPath("$[1].name", is(name2)))
-                .andExpect(jsonPath("$[0].description", is(description)))
-                .andExpect(jsonPath("$[1].description", is(description)))
-                .andExpect(jsonPath("$[0].id", is(subRead1.getId().intValue())))
-                .andExpect(jsonPath("$[1].id", is(subRead2.getId().intValue())));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].name", is(name1)))
+                .andExpect(jsonPath("$.content[1].name", is(name2)))
+                .andExpect(jsonPath("$.content[0].description", is(description)))
+                .andExpect(jsonPath("$.content[1].description", is(description)))
+                .andExpect(jsonPath("$.content[0].id", is(subRead1.getId().intValue())))
+                .andExpect(jsonPath("$.content[1].id", is(subRead2.getId().intValue())));
     }
 
     @Test
-    void getAllSubreddits2Wrong() throws Exception {
-        mockMvc.perform(get("/api/subreddit"))
+    void getAllSub2Wrong() throws Exception {
+        mockMvc.perform(get("/sub-read"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
     @Test
-    void getSubredditRight1() throws Exception {
-        String name1 = "getSubreddit1Right";
-        String description = "getSubreddit1RightD";
+    void getSubRight1() throws Exception {
+        String name1 = "get sub-read";
+        String description = "get sub-read";
         SubRead subRead1 = subReadRepository.save(SubRead.builder()
                 .name(name1)
                 .description(description)
                 .build());
-        mockMvc.perform(get("/api/subreddit/" + subRead1.getId()))
+        mockMvc.perform(get("/sub-read/" + subRead1.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(name1)))
@@ -157,12 +121,12 @@ class SubReadControllerTest {
     }
 
     @Test
-    void getSubredditWrong2() throws Exception {
+    void getSubWrong2() throws Exception {
         long id = 2626L;
-        mockMvc.perform(get("/api/subreddit/" + id))
+        mockMvc.perform(get("/sub-read/" + id))
                 .andDo(print())
-                .andExpect(status().is(404))
-                .andExpect(content().string("No subreddit found with ID - " + id));
+                .andExpect(status().is(500))
+                .andExpect(content().string(SUB_NOT_FOUND.getBodyEn().formatted(id)));
     }
 
 }

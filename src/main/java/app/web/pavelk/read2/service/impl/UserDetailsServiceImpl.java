@@ -6,6 +6,7 @@ import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.USER_NOT_FOUND;
+
+@Slf4j(topic = "user-service")
 @Service
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService, UserService {
@@ -45,33 +49,28 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     @Override
     public Long getUserId() {
         try {
-            org.springframework.security.core.userdetails.User principal = getPrincipal();
-            if (principal == null) return null;
-            return userMap.get(principal.getUsername()).getId();
+            return getUser().getId();
         } catch (Exception e) {
+            log.error(e.getMessage());
             return null;
         }
     }
 
     @Override
     public User getUser() {
-        try {
-            org.springframework.security.core.userdetails.User principal = getPrincipal();
-            if (principal == null) return null;
-            return Optional.ofNullable(userMap.get(principal.getUsername()))
-                    .orElseGet(() -> userRepository.findByUsername(principal.getUsername())
-                            .orElse(null));
-        } catch (Exception e) {
-            return null;
-        }
+        org.springframework.security.core.userdetails.User principal = getPrincipal();
+        if (principal == null) throw new UsernameNotFoundException(USER_NOT_FOUND.getBodyEn());
+        return Optional.ofNullable(userMap.get(principal.getUsername()))
+                .orElseGet(() -> userRepository.findByUsername(principal.getUsername())
+                        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getBodyEn())));
     }
 
     @Override
     public User getCurrentUserFromDB() {
         org.springframework.security.core.userdetails.User principal = getPrincipal();
-        if (principal == null) return null;
+        if (principal == null) throw new UsernameNotFoundException(USER_NOT_FOUND.getBodyEn());
         return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User name not found " + principal.getUsername()));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getBodyEn().formatted(principal.getUsername())));
     }
 
     @Override
@@ -88,6 +87,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     private org.springframework.security.core.userdetails.User getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return null;
+        }
         if ((authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
             return null;
         }
