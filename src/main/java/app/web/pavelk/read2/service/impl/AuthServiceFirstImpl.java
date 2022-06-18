@@ -43,7 +43,7 @@ import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 
-@Slf4j
+@Slf4j(topic = "auth-service-first")
 @Service
 @RequiredArgsConstructor
 public class AuthServiceFirstImpl implements AuthService {

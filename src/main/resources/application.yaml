@@ -36,7 +36,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
         temp:
           use_jdbc_metadata_defaults: false
@@ -57,3 +57,22 @@ qualifier:
   allPostfix: Query
   post: PostServiceQueryImpl
   comment: CommentServiceQueryImpl
+
+logging:
+  pattern:
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    root: info
+    auth-service-first: debug
+    org.hibernate: error
+  logback:
+    rollingpolicy:
+      max-file-size: 1MB
+      clean-history-on-start: on
+      max-history: 2
+  file:
+    name: #s.log
+
+
+
+
