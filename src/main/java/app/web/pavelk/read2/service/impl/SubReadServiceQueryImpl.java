@@ -36,7 +36,7 @@ public class SubReadServiceQueryImpl implements SubReadService {
                 .name(subReadDto.getName())
                 .description(subReadDto.getDescription())
                 .createdDate(Instant.now())
-                .user(userService.getUser())
+                .user(userService.getCurrentUserFromDB())
                 .build();
         SubRead subRead = subReadRepository.save(subReadNew);
         subReadDto.setId(subRead.getId());

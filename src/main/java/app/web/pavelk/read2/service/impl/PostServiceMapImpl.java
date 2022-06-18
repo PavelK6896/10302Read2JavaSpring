@@ -52,7 +52,7 @@ public class PostServiceMapImpl implements PostService {
                 .postName(postRequestDto.getPostName())
                 .description(postRequestDto.getDescription())
                 .createdDate(LocalDateTime.now())
-                .user(authService.getCurrentUserDB())
+                .user(userService.getCurrentUserFromDB())
                 .subRead(subRead)
                 .build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -123,8 +123,8 @@ public class PostServiceMapImpl implements PostService {
     }
 
     private String getVote(Post post) {
-        if (authService.isLoggedIn()) {
-            return voteRepository.getTypeByUser(post, authService.getCurrentUserDB())
+        if (userService.isAuthenticated()) {
+            return voteRepository.getTypeByUser(post, userService.getCurrentUserFromDB())
                     .map(VoteType::toString).orElse(null);
         }
         return null;

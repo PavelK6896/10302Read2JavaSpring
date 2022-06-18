@@ -4,7 +4,6 @@ import app.web.pavelk.read2.dto.AuthenticationResponse;
 import app.web.pavelk.read2.dto.LoginRequest;
 import app.web.pavelk.read2.dto.RefreshTokenRequest;
 import app.web.pavelk.read2.dto.RegisterRequest;
-import app.web.pavelk.read2.schema.User;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
@@ -16,7 +15,4 @@ public interface AuthService {
 
     ResponseEntity<AuthenticationResponse> refreshToken(RefreshTokenRequest refreshTokenRequest);
 
-    User getCurrentUserDB();
-
-    boolean isLoggedIn();
 }

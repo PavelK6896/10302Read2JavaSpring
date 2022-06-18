@@ -58,18 +58,20 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         try {
             org.springframework.security.core.userdetails.User principal = getPrincipal();
             if (principal == null) return null;
-            return userMap.get(principal.getUsername());
+            return Optional.ofNullable(userMap.get(principal.getUsername()))
+                    .orElseGet(() -> userRepository.findByUsername(principal.getUsername())
+                            .orElse(null));
         } catch (Exception e) {
             return null;
         }
     }
 
-    private org.springframework.security.core.userdetails.User getPrincipal() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if ((authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
-            return null;
-        }
-        return (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+    @Override
+    public User getCurrentUserFromDB() {
+        org.springframework.security.core.userdetails.User principal = getPrincipal();
+        if (principal == null) return null;
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User name not found " + principal.getUsername()));
     }
 
     @Override
@@ -83,5 +85,14 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         }
         return authentication.isAuthenticated();
     }
+
+    private org.springframework.security.core.userdetails.User getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
+            return null;
+        }
+        return (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+    }
+
 
 }

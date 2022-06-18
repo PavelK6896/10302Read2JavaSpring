@@ -8,6 +8,8 @@ public interface UserService {
 
     User getUser();
 
+    User getCurrentUserFromDB();
+
     boolean isAuthenticated();
 
 }

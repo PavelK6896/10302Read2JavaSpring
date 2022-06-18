@@ -21,13 +21,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,26 +135,6 @@ public class AuthServiceFirstImpl implements AuthService {
         authenticationResponse.setRefreshToken(refreshTokenService.generateRefreshToken().getToken());
 
         return ResponseEntity.status(OK).body(authenticationResponse);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User getCurrentUserDB() {
-        org.springframework.security.core.userdetails.User principal
-                = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
-                getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User name not found " + principal.getUsername()));
-
-    }
-
-    @Override
-    public boolean isLoggedIn() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            return false;
-        }
-        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
     private String generateVerificationToken(User user) {

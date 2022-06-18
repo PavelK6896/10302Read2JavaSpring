@@ -13,6 +13,7 @@ import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.VoteType;
 import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.PostService;
+import app.web.pavelk.read2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,7 @@ public class PostServiceFirstImpl implements PostService {
     private final SubReadRepository subReadRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
+    private final UserService userService;
     private final CommentRepository commentRepository;
     private final VoteRepository voteRepository;
 
@@ -48,7 +50,7 @@ public class PostServiceFirstImpl implements PostService {
                 .postName(postRequestDto.getPostName())
                 .description(postRequestDto.getDescription())
                 .createdDate(LocalDateTime.now())
-                .user(authService.getCurrentUserDB())
+                .user(userService.getCurrentUserFromDB())
                 .subRead(subRead)
                 .build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -95,8 +97,8 @@ public class PostServiceFirstImpl implements PostService {
     }
 
     private String getVote(Post post) {
-        if (authService.isLoggedIn()) {
-            return voteRepository.getTypeByUser(post, authService.getCurrentUserDB())
+        if (userService.isAuthenticated()) {
+            return voteRepository.getTypeByUser(post, userService.getCurrentUserFromDB())
                     .map(VoteType::toString).orElse(null);
         }
         return null;

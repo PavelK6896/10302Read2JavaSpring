@@ -38,7 +38,7 @@ public class SubReadServiceFirstImpl implements SubReadService {
         });
         SubRead subReadNew = subReadMapper.mapDtoToSubRead(subReadDto);
         subReadNew.setCreatedDate(Instant.now());
-        subReadNew.setUser(userService.getUser());
+        subReadNew.setUser(userService.getCurrentUserFromDB());
         SubRead subRead = subReadRepository.save(subReadNew);
         subReadDto.setId(subRead.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(subReadDto);

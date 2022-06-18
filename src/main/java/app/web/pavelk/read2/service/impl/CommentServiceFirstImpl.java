@@ -9,9 +9,9 @@ import app.web.pavelk.read2.repository.PostRepository;
 import app.web.pavelk.read2.repository.UserRepository;
 import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.User;
-import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.CommentService;
 import app.web.pavelk.read2.service.MailService;
+import app.web.pavelk.read2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,7 @@ public class CommentServiceFirstImpl implements CommentService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final AuthService authService;
+    private final UserService userService;
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
     private final MailService mailService;
@@ -46,7 +46,7 @@ public class CommentServiceFirstImpl implements CommentService {
         log.debug("createComment");
         Post post = postRepository.findById(commentsDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("No post " + commentsDto.getPostId().toString()));
-        User currentUser = authService.getCurrentUserDB();
+        User currentUser = userService.getCurrentUserFromDB();
         commentRepository.save(commentMapper.map(commentsDto, post, currentUser));
 
         String stringMessageMail = "%s posted a comment on your post. %s/view-post/%s "

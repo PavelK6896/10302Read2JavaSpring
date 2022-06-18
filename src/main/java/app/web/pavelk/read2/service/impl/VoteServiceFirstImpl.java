@@ -8,7 +8,7 @@ import app.web.pavelk.read2.repository.VoteRepository;
 import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.Vote;
-import app.web.pavelk.read2.service.AuthService;
+import app.web.pavelk.read2.service.UserService;
 import app.web.pavelk.read2.service.VoteService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +29,14 @@ public class VoteServiceFirstImpl implements VoteService {
 
     private final VoteRepository voteRepository;
     private final PostRepository postRepository;
-    private final AuthService authService;
+    private final UserService userService;
 
     @Override
     @Transactional
     public ResponseEntity<Integer> vote(VoteDto voteDto) {
         log.debug("vote");
-        if (authService.isLoggedIn()) {
-            User currentUser = authService.getCurrentUserDB();
+        if (userService.isAuthenticated()) {
+            User currentUser = userService.getCurrentUserFromDB();
             Post post = postRepository.findById(voteDto.getPostId())
                     .orElseThrow(() -> new PostNotFoundException("Post Not Found with ID - " + voteDto.getPostId()));
             Optional<Vote> optionalVote = voteRepository.getTypeByUserPostId(voteDto.getPostId(), currentUser);
