@@ -7,7 +7,6 @@ import app.web.pavelk.read2.repository.CommentRepository;
 import app.web.pavelk.read2.repository.PostRepository;
 import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.User;
-import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.CommentService;
 import app.web.pavelk.read2.service.MailService;
 import app.web.pavelk.read2.service.UserService;
@@ -21,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.POST_NOT_FOUND;
+import static app.web.pavelk.read2.util.StaticField.POST_COMMENT_MESSAGE_NOTIFICATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -30,7 +31,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class CommentServiceQueryImpl implements CommentService {
 
     private final PostRepository postRepository;
-    private final AuthService authService;
     private final UserService userService;
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
@@ -42,11 +42,11 @@ public class CommentServiceQueryImpl implements CommentService {
     @Transactional
     public ResponseEntity<Void> createComment(CommentsDto commentsDto) {
         Post post = postRepository.findById(commentsDto.getPostId())
-                .orElseThrow(() -> new PostNotFoundException("No post " + commentsDto.getPostId().toString()));
+                .orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND.getMessage().formatted(commentsDto.getPostId())));
         User currentUser = userService.getCurrentUserFromDB();
         commentRepository.save(commentMapper.map(commentsDto, post, currentUser));
 
-        String stringMessageMail = "%s posted a comment on your post. %s/view-post/%s "
+        String stringMessageMail = POST_COMMENT_MESSAGE_NOTIFICATION
                 .formatted(currentUser.getUsername(), hostUrl, commentsDto.getPostId());
         mailService.sendCommentNotification(stringMessageMail, currentUser);
         return ResponseEntity.status(CREATED).build();

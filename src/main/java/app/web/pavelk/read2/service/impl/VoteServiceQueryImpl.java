@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.POST_NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
@@ -37,7 +38,7 @@ public class VoteServiceQueryImpl implements VoteService {
         if (userService.isAuthenticated()) {
             User currentUser = userService.getUser();
             Post post = postRepository.findById(voteDto.getPostId())
-                    .orElseThrow(() -> new PostNotFoundException("Post Not Found with ID - " + voteDto.getPostId()));
+                    .orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND.getMessage().formatted(voteDto.getPostId())));
             Optional<Vote> optionalVote = voteRepository.getTypeByUserPostId(voteDto.getPostId(), currentUser);
 
             if (optionalVote.isPresent()) {

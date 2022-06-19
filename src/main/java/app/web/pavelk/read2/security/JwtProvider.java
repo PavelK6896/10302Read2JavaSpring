@@ -33,7 +33,7 @@ public class JwtProvider {
             InputStream resourceAsStream = getClass().getResourceAsStream("/key.jks");
             keyStore.load(resourceAsStream, "secret".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new Read2Exception(ExceptionMessage.INIT_JKS.getBodyEn(), e);
+            throw new Read2Exception(ExceptionMessage.INIT_JKS.getMessage(), e);
         }
     }
 
@@ -62,7 +62,7 @@ public class JwtProvider {
         try {
             return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            throw new Read2Exception(ExceptionMessage.RETRIEVING_KEY.getBodyEn().formatted("private"), e);
+            throw new Read2Exception(ExceptionMessage.RETRIEVING_KEY.getMessage().formatted("private"), e);
         }
     }
 
@@ -70,7 +70,7 @@ public class JwtProvider {
         try {
             return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new Read2Exception(ExceptionMessage.RETRIEVING_KEY.getBodyEn().formatted("public"), e);
+            throw new Read2Exception(ExceptionMessage.RETRIEVING_KEY.getMessage().formatted("public"), e);
         }
     }
 

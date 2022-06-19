@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.Instant;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.SUB_EXISTS;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class SubReadServiceQueryImpl implements SubReadService {
     @Transactional
     public ResponseEntity<SubReadDto> createSubRead(SubReadDto subReadDto) {
         subReadRepository.findByName(subReadDto.getName()).ifPresent(subRead -> {
-            throw new Read2Exception("Sub read name %s exist.".formatted(subRead.getName()));
+            throw new Read2Exception(SUB_EXISTS.getMessage().formatted(subRead.getName()));
         });
         SubRead subReadNew = SubRead.builder()
                 .name(subReadDto.getName())
@@ -53,7 +55,7 @@ public class SubReadServiceQueryImpl implements SubReadService {
     @Override
     public ResponseEntity<SubReadDto> getSubReadById(Long id) {
         SubReadDto subReadDto = subReadRepository.findSubReadDto(id)
-                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(id)));
+                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getMessage().formatted(id)));
         return ResponseEntity.status(HttpStatus.OK).body(subReadDto);
     }
 

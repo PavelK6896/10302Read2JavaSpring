@@ -126,7 +126,7 @@ class SubReadControllerTest extends TestCommonController {
         mockMvc.perform(get("/sub-read/" + id))
                 .andDo(print())
                 .andExpect(status().is(500))
-                .andExpect(content().string(SUB_NOT_FOUND.getBodyEn().formatted(id)));
+                .andExpect(content().string(SUB_NOT_FOUND.getMessage().formatted(id)));
     }
 
 }

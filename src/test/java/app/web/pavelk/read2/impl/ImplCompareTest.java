@@ -23,7 +23,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-class ImplTest extends PostgresContainer {
+class ImplCompareTest extends PostgresContainer {
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.UUID;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.REFRESH_TOKEN_NOT_FOUND;
+import static app.web.pavelk.read2.util.StaticField.REFRESH_TOKEN_DELETED;
 import static org.springframework.http.HttpStatus.OK;
 
 
@@ -36,13 +38,15 @@ public class RefreshTokenServiceFirstImpl implements RefreshTokenService {
     public RefreshToken validateRefreshToken(String token) {
         log.debug("validateRefreshToken");
         return refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new InvalidTokenException("Invalid refresh Token"));
+                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN_NOT_FOUND.getMessage()));
     }
 
     @Override
     public ResponseEntity<String> deleteRefreshToken(String token) {
         log.debug("deleteRefreshToken");
         refreshTokenRepository.deleteByToken(token);
-        return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!");
+        return ResponseEntity.status(OK).body(REFRESH_TOKEN_DELETED);
+
+
     }
 }

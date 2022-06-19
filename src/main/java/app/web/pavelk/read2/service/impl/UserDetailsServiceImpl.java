@@ -7,6 +7,8 @@ import app.web.pavelk.read2.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         if (user == null) {
             Optional<User> userOptional = userRepository.findByUsername(username);
             user = userOptional
-                    .orElseThrow(() -> new UsernameNotFoundException("No user Found with username : " + username));
+                    .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage().formatted(username)));
             userMap.put(user.getUsername(), user);
         }
         return new org.springframework.security.core.userdetails
@@ -47,6 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    @Nullable
     public Long getUserId() {
         try {
             return getUser().getId();
@@ -57,20 +60,22 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    @NonNull
     public User getUser() {
         org.springframework.security.core.userdetails.User principal = getPrincipal();
-        if (principal == null) throw new UsernameNotFoundException(USER_NOT_FOUND.getBodyEn());
+        if (principal == null) throw new UsernameNotFoundException(USER_NOT_FOUND.getMessage());
         return Optional.ofNullable(userMap.get(principal.getUsername()))
                 .orElseGet(() -> userRepository.findByUsername(principal.getUsername())
-                        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getBodyEn())));
+                        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage())));
     }
 
     @Override
+    @NonNull
     public User getCurrentUserFromDB() {
         org.springframework.security.core.userdetails.User principal = getPrincipal();
-        if (principal == null) throw new UsernameNotFoundException(USER_NOT_FOUND.getBodyEn());
+        if (principal == null) throw new UsernameNotFoundException(USER_NOT_FOUND.getMessage());
         return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getBodyEn().formatted(principal.getUsername())));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage().formatted(principal.getUsername())));
     }
 
     @Override
@@ -85,6 +90,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         return authentication.isAuthenticated();
     }
 
+    @Nullable
     private org.springframework.security.core.userdetails.User getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {

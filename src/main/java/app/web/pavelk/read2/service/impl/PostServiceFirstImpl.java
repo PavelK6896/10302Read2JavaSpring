@@ -11,7 +11,6 @@ import app.web.pavelk.read2.schema.Post;
 import app.web.pavelk.read2.schema.SubRead;
 import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.VoteType;
-import app.web.pavelk.read2.service.AuthService;
 import app.web.pavelk.read2.service.PostService;
 import app.web.pavelk.read2.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +19,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.POST_NOT_FOUND;
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.USER_NOT_FOUND;
 
 @Slf4j(topic = "post-service-first")
 @Service
@@ -34,7 +37,6 @@ public class PostServiceFirstImpl implements PostService {
     private final PostRepository postRepository;
     private final SubReadRepository subReadRepository;
     private final UserRepository userRepository;
-    private final AuthService authService;
     private final UserService userService;
     private final CommentRepository commentRepository;
     private final VoteRepository voteRepository;
@@ -45,7 +47,8 @@ public class PostServiceFirstImpl implements PostService {
         log.debug("createPost");
         SubRead subRead = subReadRepository
                 .findByName(postRequestDto.getSubReadName())
-                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(postRequestDto.getSubReadName())));
+                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getMessage()
+                        .formatted(postRequestDto.getSubReadName())));
         postRepository.save(Post.builder()
                 .postName(postRequestDto.getPostName())
                 .description(postRequestDto.getDescription())
@@ -59,9 +62,9 @@ public class PostServiceFirstImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<PostResponseDto> getPost(Long id) {
-        log.debug("getPost");
+        log.debug("getPost by id");
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException("Post not found id " + id));
+                .orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND.getMessage().formatted(id)));
         return ResponseEntity.status(HttpStatus.OK).body(getPostDto(post));
     }
 
@@ -73,14 +76,13 @@ public class PostServiceFirstImpl implements PostService {
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubReadId(Long subredditId, Pageable pageable) {
+        log.debug("getPostsBySub ");
         pageable = getDefaultPageable(pageable);
-        log.debug("getPostsBySubreddit");
         SubRead subRead = subReadRepository.findById(subredditId)
-                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(subredditId)));
+                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getMessage().formatted(subredditId)));
         Page<PostResponseDto> page = postRepository.findPageBySubRead(subRead, pageable).map(this::getPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
@@ -88,14 +90,15 @@ public class PostServiceFirstImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<Page<PostResponseDto>> getPagePostsByUsername(String username, Pageable pageable) {
+        log.debug("getPostsBySub ");
         pageable = getDefaultPageable(pageable);
-        log.debug("getPostsBySubreddit");
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username Not Found " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage().formatted(username)));
         Page<PostResponseDto> page = postRepository.findPageByUser(user, pageable).map(this::getPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
+    @Nullable
     private String getVote(Post post) {
         if (userService.isAuthenticated()) {
             return voteRepository.getTypeByUser(post, userService.getCurrentUserFromDB())

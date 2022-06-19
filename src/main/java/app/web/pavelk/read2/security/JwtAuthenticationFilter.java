@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             } catch (Exception e) {
                 if (!all)
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bad credentials");
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
             }
         }
 

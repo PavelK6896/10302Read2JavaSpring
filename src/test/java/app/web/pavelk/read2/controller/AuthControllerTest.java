@@ -8,6 +8,7 @@ import app.web.pavelk.read2.schema.User;
 import app.web.pavelk.read2.schema.VerificationToken;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import java.time.Instant;
 import java.util.UUID;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.REFRESH_TOKEN_NOT_FOUND;
+import static app.web.pavelk.read2.util.StaticField.REFRESH_TOKEN_DELETED;
+import static app.web.pavelk.read2.util.StaticField.USER_REGISTRATION_SUCCESSFUL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,7 +43,7 @@ class AuthControllerTest extends TestCommonController {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("User registration successful."));
+                .andExpect(content().string(USER_REGISTRATION_SUCCESSFUL));
     }
 
     @Test
@@ -80,7 +84,7 @@ class AuthControllerTest extends TestCommonController {
         mockMvc.perform(get("/auth/account-verification/ljljljljlkjlk"))
                 .andDo(print())
                 .andExpect(status().is(403))
-                .andExpect(content().string("Invalid verification Token"));
+                .andExpect(content().string(REFRESH_TOKEN_NOT_FOUND.getMessage()));
     }
 
     @Test
@@ -126,7 +130,7 @@ class AuthControllerTest extends TestCommonController {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(403))
-                .andExpect(result -> assertEquals("Bad credentials", result.getResponse().getErrorMessage()));
+                .andExpect(result -> assertEquals(HttpStatus.FORBIDDEN.getReasonPhrase(), result.getResponse().getErrorMessage()));
     }
 
     @Test
@@ -191,7 +195,7 @@ class AuthControllerTest extends TestCommonController {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(200))
-                .andExpect(content().string("Refresh Token Deleted Successfully!"));
+                .andExpect(content().string(REFRESH_TOKEN_DELETED));
         Assertions.assertThat(refreshTokenRepository.findByToken(string)).isEmpty();
     }
 }

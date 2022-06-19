@@ -21,7 +21,7 @@ public class Read2ErrorController implements ErrorController {
             if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 return "redirect:/main";
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-                return "error-500";
+                return "error 500";
             }
         }
         return "error";

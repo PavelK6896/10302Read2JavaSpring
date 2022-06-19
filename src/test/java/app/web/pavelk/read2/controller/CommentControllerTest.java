@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.Instant;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.POST_NOT_FOUND;
 import static app.web.pavelk.read2.exceptions.ExceptionMessage.USER_NOT_FOUND;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -77,7 +78,7 @@ class CommentControllerTest extends TestCommonController {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(404))
-                .andExpect(content().string("No post " + commentsDto.getPostId()));
+                .andExpect(content().string(POST_NOT_FOUND.getMessage().formatted(commentsDto.getPostId())));
     }
 
     @Test
@@ -107,7 +108,7 @@ class CommentControllerTest extends TestCommonController {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(404))
-                .andExpect(content().string(USER_NOT_FOUND.getBodyEn().formatted(username2)));
+                .andExpect(content().string(USER_NOT_FOUND.getMessage().formatted(username2)));
     }
 
 

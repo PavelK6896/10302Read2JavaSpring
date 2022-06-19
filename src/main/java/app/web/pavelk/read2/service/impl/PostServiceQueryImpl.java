@@ -36,7 +36,7 @@ public class PostServiceQueryImpl implements PostService {
     @Transactional
     public ResponseEntity<Void> createPost(PostRequestDto postRequestDto) {
         if (!subReadRepository.existsSubReadByName(postRequestDto.getSubReadName())) {
-            throw new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(postRequestDto.getSubReadName()));
+            throw new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getMessage().formatted(postRequestDto.getSubReadName()));
         }
         postRepository.insertPost(postRequestDto, userService.getUser().getId(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -53,7 +53,8 @@ public class PostServiceQueryImpl implements PostService {
     @Transactional
     public ResponseEntity<Page<PostResponseDto>> getPagePosts(Pageable pageable) {
         pageable = getDefaultPageable(pageable);
-        Page<PostResponseDto> postList = (Page<PostResponseDto>) (Page<?>) postRepository.findPagePost(userService.getUserId(), pageable);
+        Page<PostResponseDto> postList = (Page<PostResponseDto>) (Page<?>) postRepository
+                .findPagePost(userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postList);
     }
 
@@ -61,7 +62,8 @@ public class PostServiceQueryImpl implements PostService {
     @Transactional
     public ResponseEntity<Page<PostResponseDto>> getPagePostsBySubReadId(Long subredditId, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
-        Page<PostResponseDto> postBySubredditId = (Page<PostResponseDto>) (Page<?>) postRepository.findPostBySubredditId(subredditId, userService.getUserId(), pageable);
+        Page<PostResponseDto> postBySubredditId = (Page<PostResponseDto>) (Page<?>) postRepository
+                .findPostBySubredditId(subredditId, userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postBySubredditId);
     }
 
@@ -69,7 +71,8 @@ public class PostServiceQueryImpl implements PostService {
     @Transactional
     public ResponseEntity<Page<PostResponseDto>> getPagePostsByUsername(String username, Pageable pageable) {
         pageable = getDefaultPageable(pageable);
-        Page<PostResponseDto> postByUsername = (Page<PostResponseDto>) (Page<?>) postRepository.findPostByUsername(username, userService.getUserId(), pageable);
+        Page<PostResponseDto> postByUsername = (Page<PostResponseDto>) (Page<?>) postRepository
+                .findPostByUsername(username, userService.getUserId(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(postByUsername);
     }
 

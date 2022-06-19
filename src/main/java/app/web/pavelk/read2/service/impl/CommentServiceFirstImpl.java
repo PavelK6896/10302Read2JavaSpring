@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.POST_NOT_FOUND;
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.USER_NOT_FOUND;
+import static app.web.pavelk.read2.util.StaticField.POST_COMMENT_MESSAGE_NOTIFICATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -45,11 +48,11 @@ public class CommentServiceFirstImpl implements CommentService {
     public ResponseEntity<Void> createComment(CommentsDto commentsDto) {
         log.debug("createComment");
         Post post = postRepository.findById(commentsDto.getPostId())
-                .orElseThrow(() -> new PostNotFoundException("No post " + commentsDto.getPostId().toString()));
+                .orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND.getMessage().formatted(commentsDto.getPostId())));
         User currentUser = userService.getCurrentUserFromDB();
         commentRepository.save(commentMapper.map(commentsDto, post, currentUser));
 
-        String stringMessageMail = "%s posted a comment on your post. %s/view-post/%s "
+        String stringMessageMail = POST_COMMENT_MESSAGE_NOTIFICATION
                 .formatted(currentUser.getUsername(), hostUrl, post.getId());
         mailService.sendCommentNotification(stringMessageMail, post.getUser());
         return ResponseEntity.status(CREATED).build();
@@ -57,20 +60,20 @@ public class CommentServiceFirstImpl implements CommentService {
 
     @Override
     public ResponseEntity<Slice<CommentsDto>> getSliceCommentsForPost(Long postId, Pageable pageable) {
-        pageable = getDefaultPageable(pageable);
         log.debug("getAllCommentsForPost");
+        pageable = getDefaultPageable(pageable);
         Post post = postRepository.findById(postId).orElseThrow(() ->
-                new PostNotFoundException("Not found post " + postId));
+                new PostNotFoundException(POST_NOT_FOUND.getMessage().formatted(postId)));
         return ResponseEntity.status(OK).body(
                 commentRepository.findByPost(post, pageable).map(commentMapper::mapToDto));
     }
 
     @Override
     public ResponseEntity<Slice<CommentsDto>> getSliceCommentsForUser(String userName, Pageable pageable) {
-        pageable = getDefaultPageable(pageable);
         log.debug("getAllCommentsForUser");
+        pageable = getDefaultPageable(pageable);
         User user = userRepository.findByUsername(userName)
-                .orElseThrow(() -> new UsernameNotFoundException("User name not found " + userName));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage().formatted(userName)));
         return ResponseEntity.status(OK)
                 .body(commentRepository.findAllByUser(user, pageable).map(commentMapper::mapToDto));
     }

@@ -2,7 +2,7 @@ package app.web.pavelk.read2.service;
 
 import app.web.pavelk.read2.config.properties.AppProperties;
 import app.web.pavelk.read2.dto.RegisterRequest;
-import app.web.pavelk.read2.exceptions.UserAlreadyExists;
+import app.web.pavelk.read2.exceptions.Read2Exception;
 import app.web.pavelk.read2.repository.UserRepository;
 import app.web.pavelk.read2.repository.VerificationTokenRepository;
 import app.web.pavelk.read2.schema.User;
@@ -48,7 +48,7 @@ class AuthServiceTest {
                 .password("password")
                 .username("username")
                 .build();
-        Assertions.assertThrows(UserAlreadyExists.class, () -> {
+        Assertions.assertThrows(Read2Exception.class, () -> {
             authService.signUp(registerRequest);
         });
     }

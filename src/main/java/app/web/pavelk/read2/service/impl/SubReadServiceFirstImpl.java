@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.SUB_EXISTS;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class SubReadServiceFirstImpl implements SubReadService {
     public ResponseEntity<SubReadDto> createSubRead(SubReadDto subReadDto) {
         log.debug("createSubRead");
         subReadRepository.findByName(subReadDto.getName()).ifPresent(subRead -> {
-            throw new Read2Exception("Sub read name %s exist.".formatted(subRead.getName()));
+            throw new Read2Exception(SUB_EXISTS.getMessage().formatted(subRead.getName()));
         });
         SubRead subReadNew = subReadMapper.mapDtoToSubRead(subReadDto);
         subReadNew.setCreatedDate(Instant.now());
@@ -56,7 +58,7 @@ public class SubReadServiceFirstImpl implements SubReadService {
     public ResponseEntity<SubReadDto> getSubReadById(Long id) {
         log.debug("getSubReadById");
         SubRead subRead = subReadRepository.findByIdEntityGraph(id)
-                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getBodyEn().formatted(id)));
+                .orElseThrow(() -> new Read2Exception(ExceptionMessage.SUB_NOT_FOUND.getMessage().formatted(id)));
         return ResponseEntity.status(HttpStatus.OK).body(subReadMapper.mapSubReadToDto(subRead));
     }
 

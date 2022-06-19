@@ -8,7 +8,6 @@ import app.web.pavelk.read2.dto.RegisterRequest;
 import app.web.pavelk.read2.exceptions.ExceptionMessage;
 import app.web.pavelk.read2.exceptions.InvalidTokenException;
 import app.web.pavelk.read2.exceptions.Read2Exception;
-import app.web.pavelk.read2.exceptions.UserAlreadyExists;
 import app.web.pavelk.read2.repository.UserRepository;
 import app.web.pavelk.read2.repository.VerificationTokenRepository;
 import app.web.pavelk.read2.schema.User;
@@ -36,7 +35,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static app.web.pavelk.read2.exceptions.UserAlreadyExists.SUCH_A_USER_ALREADY_EXISTS;
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.REFRESH_TOKEN_NOT_FOUND;
+import static app.web.pavelk.read2.exceptions.ExceptionMessage.USER_EXISTS;
+import static app.web.pavelk.read2.util.StaticField.USER_REGISTRATION_SUCCESSFUL;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -46,7 +47,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class AuthServiceFirstImpl implements AuthService {
 
-    public static final String USER_REGISTRATION_SUCCESSFUL = "User registration successful.";
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
@@ -64,7 +64,7 @@ public class AuthServiceFirstImpl implements AuthService {
         Optional<User> byUsername = userRepository.findByUsername(registerRequest.getUsername());
         if (byUsername.isPresent()) {
             if (byUsername.get().isEnabled()) {
-                throw new UserAlreadyExists(SUCH_A_USER_ALREADY_EXISTS);
+                throw new Read2Exception(USER_EXISTS.getMessage());
             } else {
                 setUser = byUsername.get();
             }
@@ -92,14 +92,14 @@ public class AuthServiceFirstImpl implements AuthService {
     public ResponseEntity<Void> verifyAccount(String token) {
         log.debug("verifyAccount");
         fetchUserAndEnable(verificationTokenRepository.findByToken(token)
-                .orElseThrow(() -> new InvalidTokenException("Invalid verification Token")));
+                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN_NOT_FOUND.getMessage())));
         return ResponseEntity.status(FOUND).header("Location", appProperties.getHost() + "/read2").build();
     }
 
     private void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new Read2Exception(ExceptionMessage.USER_NOT_FOUND.getBodyEn().formatted(username)));
+                .orElseThrow(() -> new Read2Exception(ExceptionMessage.USER_NOT_FOUND.getMessage().formatted(username)));
         user.setEnabled(true);
         userRepository.save(user);
     }
@@ -111,7 +111,7 @@ public class AuthServiceFirstImpl implements AuthService {
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(loginRequest.getUsername());
         if (userDetails == null || !userDetails.isEnabled()
                 || !passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bad credentials");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null);

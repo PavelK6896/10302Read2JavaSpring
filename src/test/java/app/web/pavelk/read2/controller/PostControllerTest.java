@@ -65,7 +65,7 @@ class PostControllerTest extends TestCommonController {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(500))
-                .andExpect(content().string(SUB_NOT_FOUND.getBodyEn().formatted(subredditName)));
+                .andExpect(content().string(SUB_NOT_FOUND.getMessage().formatted(subredditName)));
     }
 
     @Test
@@ -179,7 +179,7 @@ class PostControllerTest extends TestCommonController {
     @WithMockUser(username = username5)
     void getPostsBySub1Right() throws Exception {
 
-        String subredditName = "getPostsBySubreddit1Right";
+        String subredditName = "getPostsBySub1Right";
         String password1 = "dsd$%#@sdfs";
         Long postId = 1L;
         Long subredditId = 1L;

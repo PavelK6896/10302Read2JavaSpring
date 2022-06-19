@@ -20,11 +20,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(UserAlreadyExists.class)
-    public ResponseEntity<String> userAlreadyExists(Exception e) {
-        log.error(e.getMessage() + ExceptionMessage.USER_EXISTS.getBodyEn());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
 
     @ExceptionHandler(Read2Exception.class)
     public ResponseEntity<String> springRedditException(Exception e) {
@@ -78,7 +73,7 @@ public class ExceptionController {
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
             MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getAllErrors().forEach((error) -> {
+        e.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);

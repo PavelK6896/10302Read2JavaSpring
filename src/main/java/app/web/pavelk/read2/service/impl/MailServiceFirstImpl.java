@@ -48,8 +48,8 @@ public class MailServiceFirstImpl implements MailService {
         try {
             javaMailSender.send(mimeMessagePreparator);
         } catch (MailException e) {
-            log.error(ExceptionMessage.MAIL_SENDING.getBodyEn().formatted(notificationEmail.getRecipient()), e);
-            throw new Read2Exception(ExceptionMessage.MAIL_SENDING.getBodyEn().formatted(notificationEmail.getRecipient()), e);
+            log.error(ExceptionMessage.MAIL_SENDING.getMessage().formatted(notificationEmail.getRecipient()), e);
+            throw new Read2Exception(ExceptionMessage.MAIL_SENDING.getMessage().formatted(notificationEmail.getRecipient()), e);
         }
     }
 
