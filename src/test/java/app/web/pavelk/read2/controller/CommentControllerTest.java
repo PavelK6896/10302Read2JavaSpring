@@ -28,7 +28,7 @@ class CommentControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username1)
-    void createComment1Right() throws Exception {
+    void createComment_Right() throws Exception {
         User user = userRepository.save(User.builder()
                 .created(Instant.now())
                 .email("a@pvhfha.ru")
@@ -65,7 +65,7 @@ class CommentControllerTest extends TestCommonController {
     }
 
     @Test
-    void createComment2WrongPostNotFoundException() throws Exception {
+    void createComment_PostNotFoundException_Wrong() throws Exception {
         CommentsDto commentsDto = CommentsDto.builder()
                 .createdDate(Instant.now())
                 .postId(2L)
@@ -83,7 +83,7 @@ class CommentControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username2)
-    void createComment3WrongUsernameNotFoundException() throws Exception {
+    void createComment_UsernameNotFoundException_Wrong() throws Exception {
         SubRead subRead = subReadRepository.save(SubRead.builder()
                 .description("d1")
                 .name("name1")
@@ -113,7 +113,7 @@ class CommentControllerTest extends TestCommonController {
 
 
     @Test
-    void getAllCommentsForPost1Right() throws Exception {
+    void get_AllCommentsForPost_Right() throws Exception {
         User user = userRepository.save(User.builder()
                 .created(Instant.now())
                 .email("a@pvhfha.ru")
@@ -147,7 +147,7 @@ class CommentControllerTest extends TestCommonController {
     }
 
     @Test
-    void getAllCommentsForUser1Right() throws Exception {
+    void get_AllCommentsForUser_Right() throws Exception {
         long postId = 14L;
         User user = userRepository.save(User.builder()
                 .created(Instant.now())

@@ -23,7 +23,7 @@ class SubReadControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username1)
-    void createSub1Right() throws Exception {
+    void createNewSub_Right() throws Exception {
         String password1 = "dsd$%#@sdfs";
         User user = userRepository.save(User.builder()
                 .created(Instant.now())
@@ -49,7 +49,7 @@ class SubReadControllerTest extends TestCommonController {
     }
 
     @Test
-    void createSub2Wrong() throws Exception {
+    void createNewSub_Wrong() throws Exception {
         Long id = 1L;
         String description = "create sub-read";
         SubReadDto subReadDto = SubReadDto.builder()
@@ -68,7 +68,7 @@ class SubReadControllerTest extends TestCommonController {
 
 
     @Test
-    void getAllSub1Right() throws Exception {
+    void get_AllSub_Right() throws Exception {
         String name1 = "get sub-read";
         String name2 = "get sub-read 2";
         String description = "get sub-read";
@@ -96,7 +96,7 @@ class SubReadControllerTest extends TestCommonController {
     }
 
     @Test
-    void getAllSub2Wrong() throws Exception {
+    void get_AllSub_Wrong() throws Exception {
         mockMvc.perform(get("/sub-read"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -105,7 +105,7 @@ class SubReadControllerTest extends TestCommonController {
     }
 
     @Test
-    void getSubRight1() throws Exception {
+    void get_SubById_Right() throws Exception {
         String name1 = "get sub-read";
         String description = "get sub-read";
         SubRead subRead1 = subReadRepository.save(SubRead.builder()
@@ -121,7 +121,7 @@ class SubReadControllerTest extends TestCommonController {
     }
 
     @Test
-    void getSubWrong2() throws Exception {
+    void get_SubById_Wrong() throws Exception {
         long id = 2626L;
         mockMvc.perform(get("/sub-read/" + id))
                 .andDo(print())

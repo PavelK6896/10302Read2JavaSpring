@@ -33,7 +33,7 @@ class AuthControllerTest extends TestCommonController {
 
 
     @Test
-    void signUp1Right() throws Exception {
+    void signUp_CreateNewUser_Right() throws Exception {
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email(email)
                 .password(password)
@@ -47,7 +47,7 @@ class AuthControllerTest extends TestCommonController {
     }
 
     @Test
-    void signUp2Wrong() throws Exception {
+    void signUp_CreateNewUser_Wrong() throws Exception {
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email(email)
                 .build();
@@ -60,7 +60,7 @@ class AuthControllerTest extends TestCommonController {
     }
 
     @Test
-    void accountVerification1Right() throws Exception {
+    void accountVerification_Right() throws Exception {
         User user = userRepository.save(User.builder()
                 .id(1L)
                 .created(Instant.now())
@@ -80,7 +80,7 @@ class AuthControllerTest extends TestCommonController {
     }
 
     @Test
-    void accountVerification2Wrong() throws Exception {
+    void accountVerification_Wrong() throws Exception {
         mockMvc.perform(get("/auth/account-verification/ljljljljlkjlk"))
                 .andDo(print())
                 .andExpect(status().is(403))
@@ -88,7 +88,7 @@ class AuthControllerTest extends TestCommonController {
     }
 
     @Test
-    void login1AllRight() throws Exception {
+    void loginAll_Right() throws Exception {
         userRepository.save(User.builder()
                 .created(Instant.now())
                 .email(email)
@@ -113,7 +113,7 @@ class AuthControllerTest extends TestCommonController {
     }
 
     @Test
-    void login2WrongPassword() throws Exception {
+    void login_Password_Wrong() throws Exception {
         userRepository.save(User.builder()
                 .created(Instant.now())
                 .email(email)
@@ -134,7 +134,7 @@ class AuthControllerTest extends TestCommonController {
     }
 
     @Test
-    void refreshToken1Right() throws Exception {
+    void refreshToken_Right() throws Exception {
         String string = UUID.randomUUID().toString();
         userRepository.save(User.builder()
                 .created(Instant.now())
@@ -164,7 +164,7 @@ class AuthControllerTest extends TestCommonController {
     }
 
     @Test
-    void refreshToken2Wrong() throws Exception {
+    void refreshToken_Wrong() throws Exception {
         String string = UUID.randomUUID().toString();
         RefreshTokenRequest refreshTokenRequest = RefreshTokenRequest.builder()
                 .refreshToken(string)

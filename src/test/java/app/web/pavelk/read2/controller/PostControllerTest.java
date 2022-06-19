@@ -25,7 +25,7 @@ class PostControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username1)
-    void createPost1Right() throws Exception {
+    void createNewPost_Right() throws Exception {
         String subredditName = "nameSub1";
         String password1 = "dsd$%#@sdfs";
         User user = userRepository.save(User.builder()
@@ -53,7 +53,7 @@ class PostControllerTest extends TestCommonController {
     }
 
     @Test
-    void createPost2Wrong() throws Exception {
+    void createNewPost_Wrong() throws Exception {
         String subredditName = "nameSub2";
         PostRequestDto postRequestDto = PostRequestDto.builder()
                 .description("op")
@@ -69,7 +69,7 @@ class PostControllerTest extends TestCommonController {
     }
 
     @Test
-    void createPost3Wrong_user_not_found() throws Exception {
+    void createPost_UserNotFound_Wrong() throws Exception {
         String subredditName = "nameSub2";
         SubRead subRead = subReadRepository.save(SubRead.builder()
                 .description("d1")
@@ -91,7 +91,7 @@ class PostControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username2)
-    void getAllPosts1Right() throws Exception {
+    void get_AllPosts_Right() throws Exception {
         String password1 = "dsd$%#@sdfs";
         Long postId1 = 104L;
         Long postId2 = 105L;
@@ -140,7 +140,7 @@ class PostControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username3)
-    void getPost1Right() throws Exception {
+    void get_PostById_Right() throws Exception {
         String password1 = "dsd$%#@sdfs";
         Long postId = 1L;
         User user = userRepository.save(User.builder()
@@ -177,7 +177,7 @@ class PostControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username5)
-    void getPostsBySub1Right() throws Exception {
+    void get_PostsBySub_Right() throws Exception {
 
         String subredditName = "getPostsBySub1Right";
         String password1 = "dsd$%#@sdfs";
@@ -213,7 +213,7 @@ class PostControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username6)
-    void getPostsByUsername1Right() throws Exception {
+    void get_PostsByUsername_Right() throws Exception {
         String subredditName = "getPostsByUsername1RightS";
         String password1 = "as";
         Long postId = 1L;

@@ -23,7 +23,7 @@ class VoteControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username1)
-    void voteRight1() throws Exception {
+    void vote_Right() throws Exception {
         String name = "voteRight1N";
         String description = "voteRight1D";
         String password1 = "dsd$%#@sdfs";
@@ -61,7 +61,7 @@ class VoteControllerTest extends TestCommonController {
 
     @Test
     @WithMockUser(username = username1)
-    void voteWrong2() throws Exception {
+    void vote_Wrong() throws Exception {
         String password1 = "dsd$%#@sdfs";
         userRepository.save(User.builder()
                 .created(Instant.now())

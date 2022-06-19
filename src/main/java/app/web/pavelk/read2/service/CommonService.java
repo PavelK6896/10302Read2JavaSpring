@@ -4,6 +4,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+/**
+ * Service common logic.
+ */
 public interface CommonService {
     default Pageable getDefaultPageable(Pageable pageable) {
         if (pageable.getSort().isUnsorted()) {
