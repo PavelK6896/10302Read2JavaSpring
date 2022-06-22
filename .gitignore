@@ -2,4 +2,5 @@
 /**/target/
 /**/*.iml
 /*.iml
+/src/main/resources/static/main/**
 

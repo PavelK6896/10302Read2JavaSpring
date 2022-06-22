@@ -7,7 +7,7 @@ RUN mvn -v
 RUN native-image --version
 
 FROM builder AS verify
-ADD --chown=mvn:mvn pom.xml /home/app/pom.xml
+ADD --chown=mvn:mvn ../pom.xml /home/app/pom.xml
 WORKDIR /home/app
 RUN mvn verify -P native -D skipTests -D maven.test.skip=true -e --fail-never
 
@@ -39,7 +39,7 @@ WORKDIR /
 RUN cp -r ./source/10317Read2TSAngular-master/dist/10317-read2-ts-angular/ mian
 
 FROM verify AS maven
-ADD --chown=mvn:mvn /src /home/app/src
+ADD --chown=mvn:mvn ../src /home/app/src
 
 RUN rm -r /home/app/src/main/resources/static/main
 COPY --from=build-front "/mian" /home/app/src/main/resources/static/main

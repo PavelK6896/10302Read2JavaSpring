@@ -5,7 +5,7 @@ RUN mvn -v
 RUN native-image --version
 
 FROM builder AS verify
-ADD --chown=mvn:mvn pom.xml /home/app/pom.xml
+ADD --chown=mvn:mvn ../pom.xml /home/app/pom.xml
 WORKDIR /home/app
 RUN mvn verify -P native -D skipTests -D maven.test.skip=true -e --fail-never
 
