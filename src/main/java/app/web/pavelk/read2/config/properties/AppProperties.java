@@ -11,9 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AppProperties {
 
     private boolean notificationComment;
-
     private boolean notificationSingUp;
-
     private String host;
+    private boolean bigValidators;
 
 }

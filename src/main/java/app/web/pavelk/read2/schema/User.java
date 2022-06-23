@@ -6,7 +6,6 @@ import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -39,7 +38,6 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @Email
     @NotEmpty(message = "Email is required")
     @Column(name = "email")
     private String email;
