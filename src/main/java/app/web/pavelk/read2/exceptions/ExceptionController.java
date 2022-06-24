@@ -20,53 +20,34 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionController {
 
-
-    @ExceptionHandler(Read2Exception.class)
+    @ExceptionHandler({Read2Exception.class, PostNotFoundException.class, UsernameNotFoundException.class})
     public ResponseEntity<String> springRedditException(Exception e) {
-        log.error(e.getMessage() + " Error");
+        log.error(e.toString());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> illegalArgumentException(Exception e) {
-        log.error(e.getMessage() + " Ошибка ");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> badCredentialsException(Exception e) {
-        log.error(e.getMessage() + " Неверный логин или пароль");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-    }
-
-    @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<String> invalidTokenException(Exception e) {
-        log.error(e.getMessage() + " невалидный токен");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-    }
-
-    @ExceptionHandler(PostNotFoundException.class)
+    @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
     public ResponseEntity<String> postNotFoundException(Exception e) {
-        log.error(e.getMessage() + " пост не найден");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        log.error(e.toString());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error server");
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<String> usernameNotFoundException(Exception e) {
-        log.error(e.getMessage() + " пользователь не найден");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<String> nullPointerException(Exception e) {
-        log.error(e.getMessage() + " данные не найдены");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @ExceptionHandler({BadCredentialsException.class, InvalidTokenException.class})
+    public ResponseEntity<String> badCredentialsException(Exception e) {
+        log.error(e.toString());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler(VoteException.class)
     public ResponseEntity<String> voteException(Exception e) {
-        log.error(e.getMessage() + " уже проголосовали");
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.GONE).body(e.getMessage());
+    }
+
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<String> dataException(Exception e) {
+        log.error("Error data {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error data");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -78,14 +59,8 @@ public class ExceptionController {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        log.error(e.getLocalizedMessage() + " ошибка параметры");
+        log.error("Error param {}", e.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
-
-    @ExceptionHandler(DataException.class)
-    public ResponseEntity<String> dataException(Exception e) {
-        log.error(e.getMessage() + " error data");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error data");
     }
 
 }

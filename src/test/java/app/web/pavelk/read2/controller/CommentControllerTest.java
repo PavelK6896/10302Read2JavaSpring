@@ -77,7 +77,7 @@ class CommentControllerTest extends TestCommonController {
                         .content(objectMapper.writeValueAsString(commentsDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is(404))
+                .andExpect(status().is(500))
                 .andExpect(content().string(POST_NOT_FOUND.getMessage().formatted(commentsDto.getPostId())));
     }
 
@@ -107,7 +107,7 @@ class CommentControllerTest extends TestCommonController {
                         .content(objectMapper.writeValueAsString(comment1))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is(404))
+                .andExpect(status().is(500))
                 .andExpect(content().string(USER_NOT_FOUND.getMessage().formatted(username2)));
     }
 

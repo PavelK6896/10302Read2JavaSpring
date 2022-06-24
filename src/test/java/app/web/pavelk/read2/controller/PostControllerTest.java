@@ -85,7 +85,7 @@ class PostControllerTest extends TestCommonController {
                         .content(objectMapper.writeValueAsString(postRequestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is(404));
+                .andExpect(status().is(500));
         subReadRepository.delete(subRead);
     }
 

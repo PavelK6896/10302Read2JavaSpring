@@ -62,8 +62,8 @@ class SubReadControllerTest extends TestCommonController {
                         .content(objectMapper.writeValueAsString(subReadDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is(404))
-                .andExpect(content().string("name is marked non-null but is null"));
+                .andExpect(status().is(500))
+                .andExpect(content().string("Error server"));
     }
 
 
