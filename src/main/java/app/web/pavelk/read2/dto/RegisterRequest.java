@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Schema(description = "sing up data")
 public class RegisterRequest {
-
     @NotNull
     @Schema(description = "email")
     private String email;
@@ -24,5 +23,4 @@ public class RegisterRequest {
     @NotNull
     @Schema(description = "password")
     private String password;
-
 }

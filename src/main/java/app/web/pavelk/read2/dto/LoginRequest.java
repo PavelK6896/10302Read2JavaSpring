@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "Data login")
 public class LoginRequest {
     @Schema(description = "username", example = "admin", required = true)
     private String username;

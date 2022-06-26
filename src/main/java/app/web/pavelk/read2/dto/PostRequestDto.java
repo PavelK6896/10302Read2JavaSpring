@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "Post create data")
 public class PostRequestDto {
     @Schema(description = "subReadName", example = "Technical", required = true)
     private String subReadName;
