@@ -44,6 +44,9 @@ public class Post {
     @ToString.Exclude
     private SubRead subRead;
 
+    @Column(name = "sub_read_id", insertable = false, updatable = false)
+    private Long subReadId;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

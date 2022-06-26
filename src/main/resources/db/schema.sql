@@ -65,11 +65,6 @@ create table if not exists post.vote
     user_id   int8,
     primary key (id)
 );
-create table if not exists sub_read_posts
-(
-    sub_read_id int8 not null,
-    posts_id    int8 not null
-);
 
 alter table client.token
     drop constraint if exists FKj8rfw4x0wjjyibfqq566j4qng;
@@ -135,29 +130,3 @@ alter table if exists post.vote
     add constraint FKkmvvqilx49120p47nr9t56omf
         foreign key (user_id)
             references client.users;
-
-
-alter table if exists sub_read_posts
-    drop constraint if exists UK_ih17w4fa2em7w3u1tt8gqv2wh;
-
-alter table if exists sub_read_posts
-    add constraint UK_ih17w4fa2em7w3u1tt8gqv2wh unique (posts_id);
-
-
-alter table sub_read_posts
-    drop constraint if exists FKl27wc8sin3rt45ayge7fanx10;
-
-
-alter table if exists sub_read_posts
-    add constraint FKl27wc8sin3rt45ayge7fanx10
-        foreign key (posts_id)
-            references post.post;
-
-alter table sub_read_posts
-    drop constraint if exists FK1plpyiqs72shw84g90q0fes5r;
-
-
-alter table sub_read_posts
-    add constraint FK1plpyiqs72shw84g90q0fes5r
-        foreign key (sub_read_id)
-            references post.sub_read;

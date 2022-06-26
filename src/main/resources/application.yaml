@@ -40,6 +40,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
         temp:
           use_jdbc_metadata_defaults: false
+        query:
+          plan_cache_max_size: 32
+          plan_parameter_metadata_max_size: 16
+          in_clause_parameter_padding: true
     hibernate:
       ddl-auto: none
     open-in-view: false

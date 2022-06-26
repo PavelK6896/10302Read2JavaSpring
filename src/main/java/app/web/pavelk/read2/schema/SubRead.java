@@ -32,7 +32,7 @@ public class SubRead {
     @NotBlank(message = "Description is required")
     private String description;
 
-    @OneToMany(fetch = LAZY)
+    @OneToMany(fetch = LAZY, mappedBy = "subRead")
     @ToString.Exclude
     private List<Post> posts;
 
