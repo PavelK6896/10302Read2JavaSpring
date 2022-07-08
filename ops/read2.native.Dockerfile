@@ -22,5 +22,5 @@ COPY --from=maven "/home/app/target/$NAME_APP" spring-boot-native
 CMD [ "sh", "-c", "./spring-boot-native " ]
 
 
-# docker build -t read2-v1 -f read2.native.Dockerfile .
+# docker build -t read2-v1 -f ops/read2.native.Dockerfile .
 # docker run --name read2-v1-c1 -p 8080:8080 -d read2-v1
