@@ -65,7 +65,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String bearerToken = request.getHeader("YB-token");
+        if (bearerToken == null) {
+            bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        }
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
